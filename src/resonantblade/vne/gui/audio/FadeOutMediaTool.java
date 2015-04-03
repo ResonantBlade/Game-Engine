@@ -5,6 +5,11 @@ import java.nio.ShortBuffer;
 import com.xuggle.mediatool.MediaToolAdapter;
 import com.xuggle.mediatool.event.IAudioSamplesEvent;
 
+/**
+ * This class is used for fading out audio over a period of time.
+ * @author Matthew
+ *
+ */
 public class FadeOutMediaTool extends MediaToolAdapter
 {
 	private double volume = 1.0D;
@@ -13,6 +18,7 @@ public class FadeOutMediaTool extends MediaToolAdapter
 	
 	public FadeOutMediaTool(double seconds)
 	{
+		// calculate the change in volume per second
 		changePerSecond = 1.0D / seconds;
 	}
 	
@@ -20,12 +26,8 @@ public class FadeOutMediaTool extends MediaToolAdapter
 	public void onAudioSamples(IAudioSamplesEvent event)
 	{
 		int sampleRate = event.getAudioSamples().getSampleRate();
-		double volumeIncrement = changePerSecond / sampleRate;
-		ShortBuffer buffer = event.getAudioSamples().getByteBuffer().asShortBuffer();
-		for(int i = 0; i < buffer.limit() && volume > 0.0D; i++, volume -= volumeIncrement)
-		{
-			buffer.put((short) (buffer.get(i) * volume));
-		}
+		double volumeDecrement = -changePerSecond / sampleRate;
+		volume = VolumeUtils.changeVolume(event, volume, volumeDecrement, 0.0D);
 		isDone = volume <= 0.0D;
 		
 		super.onAudioSamples(event);

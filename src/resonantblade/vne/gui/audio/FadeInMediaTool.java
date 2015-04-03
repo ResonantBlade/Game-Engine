@@ -5,6 +5,11 @@ import java.nio.ShortBuffer;
 import com.xuggle.mediatool.MediaToolAdapter;
 import com.xuggle.mediatool.event.IAudioSamplesEvent;
 
+/**
+ * This class is used for fading in an audio file over a certain period of time.
+ * @author Matthew
+ *
+ */
 public class FadeInMediaTool extends MediaToolAdapter
 {
 	private double volume = 0.0D;
@@ -12,6 +17,7 @@ public class FadeInMediaTool extends MediaToolAdapter
 	
 	public FadeInMediaTool(double seconds)
 	{
+		// calculate the change in volume per second;
 		changePerSecond = 1.0D / seconds;
 	}
 	
@@ -20,11 +26,8 @@ public class FadeInMediaTool extends MediaToolAdapter
 	{
 		int sampleRate = event.getAudioSamples().getSampleRate();
 		double volumeIncrement = changePerSecond / sampleRate;
-		ShortBuffer buffer = event.getAudioSamples().getByteBuffer().asShortBuffer();
-		for(int i = 0; i < buffer.limit() && volume < 1.0D; i++, volume += volumeIncrement)
-		{
-			buffer.put((short) (buffer.get(i) * volume));
-		}
+		
+		VolumeUtils.changeVolume(event, volume, volumeIncrement, 1.0D);
 		
 		super.onAudioSamples(event);
 	}

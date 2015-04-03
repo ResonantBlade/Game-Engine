@@ -1,10 +1,17 @@
 package resonantblade.vne.gui.audio;
 
+import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
 import java.nio.ShortBuffer;
 
 import com.xuggle.mediatool.MediaToolAdapter;
 import com.xuggle.mediatool.event.IAudioSamplesEvent;
 
+/**
+ * This class is used for controlling the volume of each stream.
+ * @author Matthew
+ *
+ */
 public class VolumeControlMediaTool extends MediaToolAdapter
 {
 	public double volume = 1.0D;
@@ -12,12 +19,7 @@ public class VolumeControlMediaTool extends MediaToolAdapter
 	@Override
 	public void onAudioSamples(IAudioSamplesEvent event)
 	{
-		ShortBuffer buffer = event.getAudioSamples().getByteBuffer().asShortBuffer();
-		for(int i = 0; i < buffer.limit(); i ++)
-		{
-			buffer.put((short) (buffer.get(i) * volume));
-		}
-		
+		VolumeUtils.changeVolume(event, volume);
 		super.onAudioSamples(event);
 	}
 }

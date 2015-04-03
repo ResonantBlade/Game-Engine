@@ -8,7 +8,7 @@ import resonantblade.vne.gui.FPSController;
 import resonantblade.vne.gui.GUI;
 import resonantblade.vne.script.ScriptInterpreter;
 
-public class Sunrider
+public class VisualNovelEngine
 {
 	public static final List<Battleship> playerShips = new ArrayList<Battleship>();
 	public static final List<Battleship> enemyShips = new ArrayList<Battleship>();
