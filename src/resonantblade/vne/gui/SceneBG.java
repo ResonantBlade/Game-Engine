@@ -1,4 +1,4 @@
-package matt.sunrider.gui;
+package resonantblade.vne.gui;
 
 import java.awt.AlphaComposite;
 import java.awt.Color;
@@ -6,8 +6,8 @@ import java.awt.Composite;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
+import resonantblade.vne.Image;
 import javafx.geometry.Point3D;
-import matt.sunrider.Image;
 
 public class SceneBG extends Displayable
 {

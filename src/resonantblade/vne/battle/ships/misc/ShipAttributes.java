@@ -1,11 +1,11 @@
-package matt.sunrider.battle.ships.misc;
+package resonantblade.vne.battle.ships.misc;
 
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import matt.sunrider.battle.ships.Battleship;
+import resonantblade.vne.battle.ships.Battleship;
 
 public class ShipAttributes
 {

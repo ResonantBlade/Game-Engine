@@ -1,4 +1,4 @@
-package matt.sunrider.gui;
+package resonantblade.vne.gui;
 
 import java.awt.DisplayMode;
 import java.awt.GraphicsDevice;

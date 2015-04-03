@@ -1,4 +1,4 @@
-package matt.sunrider.gui;
+package resonantblade.vne.gui;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -16,11 +16,11 @@ import javafx.geometry.Point3D;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-import matt.sunrider.Image;
-import matt.sunrider.gui.audio.FadeInMediaTool;
-import matt.sunrider.gui.audio.FadeOutMediaTool;
-import matt.sunrider.gui.audio.VolumeControlMediaTool;
-import matt.sunrider.script.ScriptInterpreter.Character;
+import resonantblade.vne.Image;
+import resonantblade.vne.gui.audio.FadeInMediaTool;
+import resonantblade.vne.gui.audio.FadeOutMediaTool;
+import resonantblade.vne.gui.audio.VolumeControlMediaTool;
+import resonantblade.vne.script.ScriptInterpreter.Character;
 
 import com.xuggle.mediatool.AMediaToolMixin;
 import com.xuggle.mediatool.IMediaListener;

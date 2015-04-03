@@ -1,4 +1,4 @@
-package matt.sunrider.battle.ships.misc;
+package resonantblade.vne.battle.ships.misc;
 
 public class Weapon
 {

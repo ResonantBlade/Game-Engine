@@ -1,12 +1,12 @@
-package matt.sunrider;
+package resonantblade.vne;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import matt.sunrider.battle.ships.Battleship;
-import matt.sunrider.gui.FPSController;
-import matt.sunrider.gui.GUI;
-import matt.sunrider.script.ScriptInterpreter;
+import resonantblade.vne.battle.ships.Battleship;
+import resonantblade.vne.gui.FPSController;
+import resonantblade.vne.gui.GUI;
+import resonantblade.vne.script.ScriptInterpreter;
 
 public class Sunrider
 {

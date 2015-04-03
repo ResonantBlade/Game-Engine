@@ -1,17 +1,17 @@
-package matt.sunrider.script;
+package resonantblade.vne.script;
 
-import static matt.sunrider.script.ScriptInterpreter.audio;
-import static matt.sunrider.script.ScriptInterpreter.characters;
+import static resonantblade.vne.script.ScriptInterpreter.audio;
+import static resonantblade.vne.script.ScriptInterpreter.characters;
 
 import java.awt.Color;
 import java.io.File;
 import java.util.Arrays;
 import java.util.Stack;
 
+import resonantblade.vne.gui.GUI;
+import resonantblade.vne.script.ScriptInterpreter.Character;
+import resonantblade.vne.script.ScriptInterpreter.Label;
 import javafx.geometry.Point3D;
-import matt.sunrider.gui.GUI;
-import matt.sunrider.script.ScriptInterpreter.Character;
-import matt.sunrider.script.ScriptInterpreter.Label;
 
 public class LabelInterpreter
 {

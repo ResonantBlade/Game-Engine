@@ -1,9 +1,9 @@
-package matt.sunrider.battle;
+package resonantblade.vne.battle;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import matt.sunrider.battle.ships.Battleship;
+import resonantblade.vne.battle.ships.Battleship;
 
 public class BattleManager
 {

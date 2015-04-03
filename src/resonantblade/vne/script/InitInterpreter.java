@@ -1,15 +1,15 @@
-package matt.sunrider.script;
+package resonantblade.vne.script;
 
-import static matt.sunrider.script.ScriptInterpreter.audio;
-import static matt.sunrider.script.ScriptInterpreter.characters;
-import static matt.sunrider.script.ScriptInterpreter.images;
+import static resonantblade.vne.script.ScriptInterpreter.audio;
+import static resonantblade.vne.script.ScriptInterpreter.characters;
+import static resonantblade.vne.script.ScriptInterpreter.images;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.Stack;
 
-import matt.sunrider.Image;
-import matt.sunrider.script.ScriptInterpreter.Character;
+import resonantblade.vne.Image;
+import resonantblade.vne.script.ScriptInterpreter.Character;
 
 public class InitInterpreter
 {

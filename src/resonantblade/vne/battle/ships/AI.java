@@ -1,4 +1,4 @@
-package matt.sunrider.battle.ships;
+package resonantblade.vne.battle.ships;
 
 public class AI
 {

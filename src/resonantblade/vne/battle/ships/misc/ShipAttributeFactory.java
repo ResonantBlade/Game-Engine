@@ -1,11 +1,9 @@
-package matt.sunrider.battle.ships.misc;
+package resonantblade.vne.battle.ships.misc;
 
 public class ShipAttributeFactory
 {
 	public static ShipAttributeFactory getInstance(ShipType type)
 	{
-		ShipAttributes attributes;
-		
 		switch(type)
 		{
 		case ASSAULT_CARRIER:

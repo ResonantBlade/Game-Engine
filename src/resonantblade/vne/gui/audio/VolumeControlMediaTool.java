@@ -1,4 +1,4 @@
-package matt.sunrider.gui.audio;
+package resonantblade.vne.gui.audio;
 
 import java.nio.ShortBuffer;
 

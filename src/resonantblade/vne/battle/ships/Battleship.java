@@ -1,14 +1,14 @@
-package matt.sunrider.battle.ships;
+package resonantblade.vne.battle.ships;
 
 import java.util.List;
 
-import matt.sunrider.battle.BattleManager;
-import matt.sunrider.battle.ships.misc.Faction;
-import matt.sunrider.battle.ships.misc.Modifier;
-import matt.sunrider.battle.ships.misc.ShipAttributes;
-import matt.sunrider.battle.ships.misc.ShipType;
-import matt.sunrider.battle.ships.misc.WeaponType;
-import matt.sunrider.script.ScriptInterpreter;
+import resonantblade.vne.battle.BattleManager;
+import resonantblade.vne.battle.ships.misc.Faction;
+import resonantblade.vne.battle.ships.misc.Modifier;
+import resonantblade.vne.battle.ships.misc.ShipAttributes;
+import resonantblade.vne.battle.ships.misc.ShipType;
+import resonantblade.vne.battle.ships.misc.WeaponType;
+import resonantblade.vne.script.ScriptInterpreter;
 
 public abstract class Battleship
 {

@@ -1,4 +1,4 @@
-package matt.sunrider.script;
+package resonantblade.vne.script;
 
 import java.awt.Color;
 import java.io.BufferedReader;
@@ -10,7 +10,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import matt.sunrider.TaggedImageMap;
+import resonantblade.vne.TaggedImageMap;
 
 public class ScriptInterpreter
 {

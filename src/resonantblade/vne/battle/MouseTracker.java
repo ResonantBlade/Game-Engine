@@ -1,4 +1,4 @@
-package matt.sunrider.battle;
+package resonantblade.vne.battle;
 
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
