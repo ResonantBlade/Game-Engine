@@ -9,7 +9,7 @@ import java.awt.image.BufferedImage;
 import resonantblade.vne.Image;
 import javafx.geometry.Point3D;
 
-public class SceneBG extends Displayable
+public class SceneBG extends ImageDisplayable
 {
 	public static final SceneBG BLANK;
 	
@@ -38,10 +38,8 @@ public class SceneBG extends Displayable
 		g.setComposite(ac);
 		
 		BufferedImage image = getImage().getImage();
-		//long l1 = System.currentTimeMillis();
 		
 		g.drawImage(image, 0, 0, GUI.WIDTH, GUI.HEIGHT, null);
 		g.setComposite(prevComposite);
-		//System.out.println(System.currentTimeMillis() - l1);
 	}
 }

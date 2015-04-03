@@ -55,7 +55,7 @@ public class GUI
 		fpsController = fpscon;
 		buffer = new BufferedImage(1920, 1080, BufferedImage.TYPE_INT_ARGB);
 		frame = new JFrame("ADF");
-		frame.setSize(800, 600);
+		frame.setSize(960, 540);
 		frame.setLocationRelativeTo(null);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setVisible(true);
@@ -182,12 +182,16 @@ public class GUI
 			if(Double.isNaN(position.getZ()))
 				position = new Point3D(position.getX(), position.getY(), current.getPosition().getZ());
 			double ease = 0.0D;
-			for(int i = 0; i < transitions.length - 1; i++)
+			for(int i = 0; i < transitions.length; i++)
 			{
-				if(transitions[i].trim().equals("ease"))
+				if(transitions[i].trim().equals("ease") && i != transitions.length - 1)
 				{
 					ease = Double.parseDouble(transitions[i + 1]);
 					break;
+				}
+				if(transitions[i].equals("fade") && i != transitions.length - 1)
+				{
+					current.fade(Double.parseDouble(transitions[i + 1]), true);
 				}
 			}
 			if(ease == 0.0D)
@@ -203,7 +207,15 @@ public class GUI
 				position = new Point3D(position.getX(), 0.5D, position.getZ());
 			if(Double.isNaN(position.getZ()))
 				position = new Point3D(position.getX(), position.getY(), 1.0D);
-			sprites.add(new Displayable(img, position, transitions));
+			current = new ImageDisplayable(img, position, transitions);
+			for(int i = 0; i < transitions.length; i++)
+			{
+				if(transitions[i].equals("fade") && i != transitions.length - 1)
+				{
+					current.fade(Double.parseDouble(transitions[i + 1]), true);
+				}
+			}
+			sprites.add(current);
 		}
 	}
 	

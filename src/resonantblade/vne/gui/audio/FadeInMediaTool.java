@@ -1,7 +1,5 @@
 package resonantblade.vne.gui.audio;
 
-import java.nio.ShortBuffer;
-
 import com.xuggle.mediatool.MediaToolAdapter;
 import com.xuggle.mediatool.event.IAudioSamplesEvent;
 
