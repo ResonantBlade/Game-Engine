@@ -8,10 +8,11 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.Stack;
 
+import javafx.geometry.Point3D;
+import resonantblade.vne.audio.AudioSystem;
 import resonantblade.vne.gui.GUI;
 import resonantblade.vne.script.ScriptInterpreter.Character;
 import resonantblade.vne.script.ScriptInterpreter.Label;
-import javafx.geometry.Point3D;
 
 public class LabelInterpreter
 {
@@ -148,7 +149,7 @@ public class LabelInterpreter
 							fadeDuration = Double.parseDouble(line.substring(0, line.indexOf(" ") == -1 ? line.length() : line.indexOf(" ")));
 							fade = true;
 						}
-						GUI.playAudio(type, audioFile, loop, fade, fadeDuration);
+						AudioSystem.playAudio(type, audioFile, loop, fade, fadeDuration);
 					}
 					else
 					{
@@ -165,7 +166,7 @@ public class LabelInterpreter
 							fadeDuration = Double.parseDouble(line.substring(0, line.indexOf(" ") == -1 ? line.length() : line.indexOf(" ")));
 							fade = true;
 						}
-						GUI.playAudio(type, audioFile, loop, fade, fadeDuration);
+						AudioSystem.playAudio(type, audioFile, loop, fade, fadeDuration);
 					}
 					break;
 				case "stop":
@@ -180,7 +181,7 @@ public class LabelInterpreter
 						fadeDuration = Double.parseDouble(line.substring(0, line.indexOf(" ") == -1 ? line.length() : line.indexOf(" ")));
 						fade = true;
 					}
-					GUI.stopAudio(type, fade, fadeDuration);
+					AudioSystem.stopAudio(type, fade, fadeDuration);
 					break;
 				case "wait":
 					if(line.indexOf("#") != -1)
@@ -311,7 +312,10 @@ public class LabelInterpreter
 		}
 		
 		if(!restart)
+		{
+			AudioSystem.kill();
 			GUI.kill();
+		}
 		
 		return restart;
 	}

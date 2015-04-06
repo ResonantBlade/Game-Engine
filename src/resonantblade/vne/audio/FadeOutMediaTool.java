@@ -1,4 +1,4 @@
-package resonantblade.vne.gui.audio;
+package resonantblade.vne.audio;
 
 import com.xuggle.mediatool.MediaToolAdapter;
 import com.xuggle.mediatool.event.IAudioSamplesEvent;
