@@ -2,16 +2,15 @@ package resonantblade.vne;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class Image
 {
-	private List<String> tags;
-	private String url;
-	private BufferedImage image;
+	protected List<String> tags;
+	protected String url;
+	protected BufferedImage image;
 	
 	public Image(String url, String... tags)
 	{

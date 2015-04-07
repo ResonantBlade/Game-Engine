@@ -175,8 +175,7 @@ public class ScriptInterpreter
 	
 	public static void init()
 	{
-		initializers.stream().sorted((il1, il2) -> il1.priority - il2.priority)
-		.forEachOrdered(initLabel -> InitInterpreter.interpretInit(initLabel.data));
+		initializers.stream().sorted((il1, il2) -> il1.priority - il2.priority).forEachOrdered(initLabel -> InitInterpreter.interpretInit(initLabel.data));
 	}
 	
 	public static void start()
