@@ -12,6 +12,7 @@ public class VisualNovelEngine
 {
 	public static final List<Battleship> playerShips = new ArrayList<Battleship>();
 	public static final List<Battleship> enemyShips = new ArrayList<Battleship>();
+	protected volatile static GUI gui;
 	
 	public static void main(String[] args)
 	{
@@ -19,7 +20,7 @@ public class VisualNovelEngine
             @Override
             public void run() {
                 FPSController fpscon = new FPSController();
-                GUI gui = new GUI(fpscon);
+                gui = new GUI(fpscon);
             }
         });
 		

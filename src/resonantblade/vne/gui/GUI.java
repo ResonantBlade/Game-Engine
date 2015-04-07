@@ -71,6 +71,11 @@ public class GUI
 		fpsController.start(this);
 	}
 	
+	public void setTitle(String name)
+	{
+		frame.setTitle(name);
+	}
+	
 	public void updateVisible()
 	{
 		if(changingLayer[0])

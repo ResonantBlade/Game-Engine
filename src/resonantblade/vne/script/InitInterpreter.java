@@ -9,6 +9,7 @@ import java.io.File;
 import java.util.Stack;
 
 import resonantblade.vne.Image;
+import resonantblade.vne.Properties;
 import resonantblade.vne.script.ScriptInterpreter.Character;
 
 public class InitInterpreter
@@ -124,6 +125,14 @@ public class InitInterpreter
 				{
 					throw new IllegalStateException("Not enough data to define an audio sample");
 				}
+				break;
+			case "title":
+				line = line.substring(5).trim();
+				if(line.charAt(0) != '"' || line.charAt(line.length() - 1) != '"')
+					throw new IllegalStateException("Invalid title");
+				
+				line = line.substring(1, line.length() - 1);
+				Properties.setGUITitle(line);
 				break;
 			default:
 				throw new IllegalStateException("Unknown data in init: " + start);
