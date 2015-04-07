@@ -77,9 +77,9 @@ public class ScriptInterpreter
 	
 	private static void parseScript(List<String> script)
 	{
+		parseInitializers(script);
 		parseDialogue(script);
 		parseBattles(script);
-		parseInitializers(script);
 	}
 	
 	private static void parseDialogue(List<String> script)
@@ -181,7 +181,11 @@ public class ScriptInterpreter
 	
 	public static void start()
 	{
-		LabelInterpreter.interpretLabel(script.get("start"));
+		boolean cont = true;
+		if(script.get("splashscreen") != null)
+			cont = LabelInterpreter.interpretLabelSingle(script.get("splashscreen"));
+		if(cont)
+			LabelInterpreter.interpretLabel(script.get("start"));
 	}
 	
 	protected static class Label

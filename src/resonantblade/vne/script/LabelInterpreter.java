@@ -20,13 +20,18 @@ public class LabelInterpreter
 	
 	protected static void interpretLabel(Label label)
 	{
-		while(INSTANCE.interpretLabel(new LabelIterator(label)))
+		while(INSTANCE.interpretLabel(new LabelIterator(label), false))
 			continue;
 		System.out.println("Game has exited");
 	}
 	
+	protected static boolean interpretLabelSingle(Label label)
+	{
+		return INSTANCE.interpretLabel(new LabelIterator(label), true);
+	}
+	
 	@SuppressWarnings("unchecked")
-	private boolean interpretLabel(LabelIterator script)
+	private boolean interpretLabel(LabelIterator script, boolean single)
 	{
 		Stack<Object> labelStack = new Stack<Object>();
 		
@@ -40,6 +45,9 @@ public class LabelInterpreter
 			{
 				if(labelStack.isEmpty())
 				{
+					if(single)
+						return true;
+					
 					System.err.println("LabelStack was empty. Falling back to start");
 					script = new LabelIterator(ScriptInterpreter.script.get("start"));
 					curIndent = 0;
