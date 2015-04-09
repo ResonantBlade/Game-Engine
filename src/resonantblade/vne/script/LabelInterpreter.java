@@ -13,6 +13,7 @@ import resonantblade.vne.audio.AudioSystem;
 import resonantblade.vne.gui.GUI;
 import resonantblade.vne.script.ScriptInterpreter.Character;
 import resonantblade.vne.script.ScriptInterpreter.Label;
+import resonantblade.vne.script.ScriptUtils.Quote;
 
 public class LabelInterpreter
 {
@@ -87,43 +88,32 @@ public class LabelInterpreter
 				}
 				
 				line = cleanComments(line).trim();
+				System.out.println("Now on line: " + line);
 				String start = line.substring(0, line.indexOf(' ') == -1 ? line.length() : line.indexOf(' '));
 				line = line.substring(start.length()).trim();
 				switch(start)
 				{
 				case "say":
-					if(line.startsWith("\""))
+					Quote text = ScriptUtils.nextQuote(line);
+					if(text.startIndex == 0)
 					{
-						String name = line.substring(1, line.indexOf("\"", 1));
-						line = line.substring(name.length() + 2).trim();
-						if(line.startsWith("\"") && line.endsWith("\""))
+						String name = text.quoteText;
+						line = line.substring(text.endIndex + 1).trim();
+						text = ScriptUtils.nextQuote(line);
+						if(text != null)
 						{
-							String text = line.substring(1, line.length() - 1);
-							GUI.say(name, Color.BLACK, text);
-						}
-						else if(line.isEmpty())
-						{
-							GUI.say("", Color.BLACK, name);
+							GUI.say(name, Color.BLACK, text.quoteText);
 						}
 						else
 						{
-							throw new IllegalStateException("Invalid say statement");
+							GUI.say("", Color.BLACK, name);
 						}
 					}
 					else
 					{
-						String name = line.substring(0, line.indexOf(" "));
+						String name = line.substring(0, text.startIndex).trim();
 						Character charr = characters.get(name);
-						line = line.substring(name.length()).trim();
-						if(line.startsWith("\"") && line.endsWith("\""))
-						{
-							String text = line.substring(1, line.length() - 1);
-							GUI.say(charr, text);
-						}
-						else
-						{
-							throw new IllegalStateException("Invalid say statement");
-						}
+						GUI.say(charr, text.quoteText);
 					}
 					break;
 				case "jump":
@@ -143,11 +133,12 @@ public class LabelInterpreter
 				case "play":
 					String type = line.substring(0, line.indexOf(" "));
 					line = line.substring(type.length()).trim();
-					if(line.startsWith("\""))
+					text = ScriptUtils.nextQuote(line);
+					if(text.startIndex == 0)
 					{
-						String audioFile = line.substring(1, line.lastIndexOf("\""));
-						line = line.substring(audioFile.length() + 2).trim();
-						boolean loop = !line.isEmpty() && !line.startsWith("#");
+						String audioFile = text.quoteText;
+						line = line.substring(text.endIndex + 1).trim();
+						boolean loop = line.contains("loop");
 						boolean fade = false;
 						double fadeDuration = 0.0D;
 						int fadeAmtIndex = line.indexOf("fade") + 4;
@@ -164,7 +155,7 @@ public class LabelInterpreter
 						String file = line.substring(0, line.indexOf(" ") == -1 ? line.length() : line.indexOf(" "));
 						File audioFile = audio.get(file);
 						line = line.substring(file.length()).trim();
-						boolean loop = !line.isEmpty() && !line.contains("loop");
+						boolean loop = line.contains("loop");
 						boolean fade = false;
 						double fadeDuration = 0.0D;
 						int fadeAmtIndex = line.indexOf("fade") + 4;
@@ -182,9 +173,9 @@ public class LabelInterpreter
 					line = line.substring(type.length()).trim();
 					boolean fade = false;
 					double fadeDuration = 0.0D;
-					if(!line.isEmpty())
+					int fadeAmtIndex = line.indexOf("fade") + 4;
+					if(fadeAmtIndex != 3)
 					{
-						int fadeAmtIndex = line.indexOf("fade") + 4;
 						line = line.substring(fadeAmtIndex).trim();
 						fadeDuration = Double.parseDouble(line.substring(0, line.indexOf(" ") == -1 ? line.length() : line.indexOf(" ")));
 						fade = true;
@@ -192,10 +183,6 @@ public class LabelInterpreter
 					AudioSystem.stopAudio(type, fade, fadeDuration);
 					break;
 				case "wait":
-					if(line.indexOf("#") != -1)
-						line = line.substring(0, line.indexOf("#")).trim();
-					if(line.indexOf(" ") != -1)
-						line = line.substring(0, line.indexOf(" ")).trim();
 					int millis;
 					try
 					{
@@ -206,24 +193,26 @@ public class LabelInterpreter
 					{
 						millis = 1000;
 					}
+					//TODO possibly redo this part
+					//try{Thread.sleep(millis);}catch(Exception e){}
 					long expected = System.currentTimeMillis() + millis;
 					while(System.currentTimeMillis() < expected)
 						continue;
 					break;
 				case "scene":
-					String[] nameAndTags = line.split(" ");
+					String[] nameAndTags = line.replaceAll(" {2,}", " ").split(" ");
 					String name = nameAndTags[0];
 					String[] tags = Arrays.copyOfRange(nameAndTags, 1, nameAndTags.length);
 					nameAndTags = null;
-					int withIndex = tags.length - 1;
-					while(withIndex >= 0)
+					int withIndex = 0;
+					while(withIndex < tags.length - 1)
 					{
 						if(tags[withIndex].equals("with"))
 							break;
-						withIndex--;
+						withIndex++;
 					}
-					String[] transitions = Arrays.copyOfRange(tags, withIndex == -1 ? tags.length : (withIndex + 1), tags.length);
-					tags = Arrays.copyOfRange(tags, 0, withIndex == -1 ? tags.length : withIndex);
+					String[] transitions = Arrays.copyOfRange(tags, withIndex + 1, tags.length);
+					tags = Arrays.copyOfRange(tags, 0, withIndex == tags.length - 1 ? tags.length : withIndex);
 					GUI.changeScene(ScriptInterpreter.images.get(name, Arrays.asList(tags)), transitions);
 					break;
 				case "show":
@@ -233,41 +222,32 @@ public class LabelInterpreter
 					if(line.contains(" xpos "))
 					{
 						int xIndex = line.indexOf(" xpos ");
-						if(xIndex != -1)
-						{
-							String temp = line.substring(xIndex + 5).trim();
-							int end = temp.indexOf(" ");
-							if(end == -1)
-								end = temp.length();
-							x = Double.parseDouble(temp.substring(0, end));
-							line = (line.substring(0, xIndex)  + " "+ temp.substring(end, temp.length()).trim()).trim();
-						}
+						String temp = line.substring(xIndex + 5).trim();
+						int end = temp.indexOf(" ");
+						if(end == -1)
+							end = temp.length();
+						x = Double.parseDouble(temp.substring(0, end));
+						line = line.substring(0, xIndex).trim() + " " + temp.substring(end, temp.length()).trim();
 					}
 					if(line.contains(" ypos "))
 					{
 						int yIndex = line.indexOf(" ypos ");
-						if(yIndex != -1)
-						{
-							String temp = line.substring(yIndex + 5).trim();
-							int end = temp.indexOf(" ");
-							if(end == -1)
-								end = temp.length();
-							y = Double.parseDouble(temp.substring(0, end));
-							line = (line.substring(0, yIndex) + " " + temp.substring(end, temp.length()).trim()).trim();
-						}
+						String temp = line.substring(yIndex + 5).trim();
+						int end = temp.indexOf(" ");
+						if(end == -1)
+							end = temp.length();
+						y = Double.parseDouble(temp.substring(0, end));
+						line = line.substring(0, yIndex).trim() + " " + temp.substring(end, temp.length()).trim();
 					}
 					if(line.contains(" zoom "))
 					{
 						int zIndex = line.indexOf(" zoom ");
-						if(zIndex != -1)
-						{
-							String temp = line.substring(zIndex + 5).trim();
-							int end = temp.indexOf(" ");
-							if(end == -1)
-								end = temp.length();
-							z = Double.parseDouble(temp.substring(0, end));
-							line = (line.substring(0, zIndex) + " " + temp.substring(end, temp.length()).trim()).trim();
-						}
+						String temp = line.substring(zIndex + 5).trim();
+						int end = temp.indexOf(" ");
+						if(end == -1)
+							end = temp.length();
+						z = Double.parseDouble(temp.substring(0, end));
+						line = line.substring(0, zIndex).trim() + " " + temp.substring(end, temp.length()).trim();
 					}
 					transitions = new String[0];
 					if(line.contains(" with "))
@@ -277,27 +257,34 @@ public class LabelInterpreter
 						{
 							String temp = line.substring(withIndex + 5).trim();
 							line = line.substring(0, withIndex).trim();
-							transitions = temp.split(" ");
+							transitions = temp.replaceAll(" {2,}", " ").split(" ");
 						}
 					}
 					
 					name = line.substring(0, line.indexOf(" ") != -1 ? line.indexOf(" ") : line.length());
 					line = line.substring(name.length()).trim();
-					tags = line.trim().split(" ");
+					tags = line.replaceAll(" {2,}", " ").split(" ");
 					GUI.showImage(ScriptInterpreter.images.get(name, Arrays.asList(tags)), new Point3D(x, y, z), transitions);
 					break;
 				case "hide":
-					nameAndTags = line.split(" ");
+					nameAndTags = line.replaceAll(" {2,}", " ").split(" ");
 					name = nameAndTags[0];
 					tags = Arrays.copyOfRange(nameAndTags, 1, nameAndTags.length);
 					nameAndTags = null;
-					String transition = null;
+					transitions = new String[0];
+					withIndex = 0;
+					while(withIndex < tags.length - 1)
+					{
+						if(tags[withIndex].equals("with"))
+							break;
+						withIndex++;
+					}
 					if(tags.length >= 2 && tags[tags.length - 2].equals("with"))
 					{
-						transition = tags[tags.length - 1];
-						tags = Arrays.copyOfRange(tags, 0, tags.length - 2);
+						transitions = Arrays.copyOfRange(tags, withIndex + 1, tags.length);
+						tags = Arrays.copyOfRange(tags, 0, withIndex == tags.length - 1 ? tags.length : withIndex);
 					}
-					GUI.hideImage(ScriptInterpreter.images.get(name, Arrays.asList(tags)), transition);
+					GUI.hideImage(ScriptInterpreter.images.get(name, Arrays.asList(tags)), transitions);
 					break;
 				case "quit":
 					if(!Boolean.parseBoolean(line))

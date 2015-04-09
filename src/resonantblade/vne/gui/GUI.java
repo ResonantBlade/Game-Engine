@@ -5,7 +5,6 @@ import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -17,16 +16,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import resonantblade.vne.Image;
-import resonantblade.vne.audio.FadeInMediaTool;
-import resonantblade.vne.audio.FadeOutMediaTool;
-import resonantblade.vne.audio.VolumeControlMediaTool;
 import resonantblade.vne.script.ScriptInterpreter.Character;
-
-import com.xuggle.mediatool.AMediaToolMixin;
-import com.xuggle.mediatool.IMediaListener;
-import com.xuggle.mediatool.IMediaReader;
-import com.xuggle.mediatool.IMediaViewer;
-import com.xuggle.mediatool.ToolFactory;
 
 public class GUI
 {
@@ -34,10 +24,10 @@ public class GUI
 	public static final int HEIGHT = 1080;
 	
 	private static volatile SceneBG background = SceneBG.BLANK;
-	private static List<Displayable> battle = new ArrayList<Displayable>();
-	private static List<Displayable> sprites = new ArrayList<Displayable>();
-	private static List<Displayable> screen = new ArrayList<Displayable>();
-	private static List<Displayable> overlay = new ArrayList<Displayable>();
+	private static volatile List<Displayable> battle = new ArrayList<Displayable>();
+	private static volatile List<Displayable> sprites = new ArrayList<Displayable>();
+	private static volatile List<Displayable> screen = new ArrayList<Displayable>();
+	private static volatile List<Displayable> overlay = new ArrayList<Displayable>();
 	
 	private JFrame frame;
 	private volatile BufferedImage buffer;
@@ -65,7 +55,7 @@ public class GUI
 			}
 		};
 		frame.getContentPane().add(panel);
-		// add key and mouse listeners
+		//TODO add key and mouse listeners
 		
 		frame.validate();
 		fpsController.start(this);
@@ -179,7 +169,6 @@ public class GUI
 				if(transitions[i].trim().equals("ease") && i != transitions.length - 1)
 				{
 					ease = Double.parseDouble(transitions[i + 1]);
-					break;
 				}
 				if(transitions[i].equals("fade") && i != transitions.length - 1)
 				{
@@ -204,6 +193,7 @@ public class GUI
 			{
 				if(transitions[i].equals("fade") && i != transitions.length - 1)
 				{
+					// TODO images seem to not show when fading in. Maybe the fading mechanism is off?
 					current.fade(Double.parseDouble(transitions[i + 1]), true);
 				}
 			}
@@ -211,7 +201,7 @@ public class GUI
 		}
 	}
 	
-	public static void hideImage(Image img, String transition)
+	public static void hideImage(Image img, String[] transitions)
 	{
 		// TODO
 	}
