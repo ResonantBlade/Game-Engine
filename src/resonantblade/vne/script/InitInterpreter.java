@@ -4,7 +4,6 @@ import static resonantblade.vne.script.ScriptInterpreter.audio;
 import static resonantblade.vne.script.ScriptInterpreter.characters;
 import static resonantblade.vne.script.ScriptInterpreter.images;
 
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.Arrays;
 import java.util.Stack;
@@ -78,29 +77,16 @@ public class InitInterpreter
 				images.put(name, new TextImage(path.quoteText, modifiers, Arrays.copyOfRange(lineData, 1, lineData.length)));
 				break;
 			case "Audio":
-				lineData = line.split(" ", 2);
-				if(lineData.length >= 2)
-				{
-					if(lineData[1].startsWith("\"") && lineData[1].endsWith("\""))
-					{
-						audio.put(lineData[0], new File(lineData[1].substring(1, lineData[1].length() - 1)));
-					}
-					else
-					{
-						throw new IllegalStateException("Invalid audio file");
-					}
-				}
-				else
-				{
-					throw new IllegalStateException("Not enough data to define an audio sample");
-				}
+				path = ScriptUtils.nextQuote(line);
+				identifier = line.substring(0, path.startIndex).trim();
+				if(identifier.contains(" "))
+					throw new IllegalStateException("Audio identifiers cannot contain spaces");
+				audio.put(identifier, new File(path.quoteText));
 				break;
 			case "title":
-				if(line.charAt(0) != '"' || line.charAt(line.length() - 1) != '"')
-					throw new IllegalStateException("Invalid title");
-				
-				line = line.substring(1, line.length() - 1);
-				Properties.setGUITitle(line);
+				Quote title = ScriptUtils.nextQuote(line);
+				if(title != null)
+					Properties.setGUITitle(title.quoteText);
 				break;
 			default:
 				throw new IllegalStateException("Unknown data in init: " + start);

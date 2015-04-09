@@ -5,19 +5,20 @@ public class ScriptUtils
 	public static String cleanComments(String line)
 	{
 		int index = 0;
-		boolean found = false;
-		while(!found && index < line.length())
+		while(index < line.length())
 		{
 			while(index < line.length() && line.charAt(index) != '#')
 				index++;
-			int count = 0;
-			for(int i = 0; i < index; i++)
-			{
-				if(line.charAt(i) == '"')
-					count++;
-			}
-			if(count % 2 == 0)
-				found = true;
+			
+			if(index == line.length())
+				return line;
+			
+			Quote q = nextQuote(line, 0);
+			while(q != null && q.endIndex < index)
+				q = nextQuote(line, q.endIndex + 1);
+			
+			if(q == null || q.startIndex > index)
+				break;
 		}
 		
 		return line.substring(0, index);
