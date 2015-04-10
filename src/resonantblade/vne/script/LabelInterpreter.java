@@ -183,21 +183,22 @@ public class LabelInterpreter
 					AudioSystem.stopAudio(type, fade, fadeDuration);
 					break;
 				case "wait":
-					int millis;
-					try
+					int millis = 0;
+					if(!line.trim().isEmpty())
 					{
-						double amt = line.isEmpty() ? 1000 : Double.parseDouble(line);
-						millis = (int) (amt * 1000);
+						try
+						{
+							millis = (int) (Double.parseDouble(line) * 1000);
+						}
+						catch(NumberFormatException e)
+						{
+							millis = 1000;
+						}
 					}
-					catch(NumberFormatException e)
+					synchronized(GUI.userInteractLock)
 					{
-						millis = 1000;
+						try{GUI.userInteractLock.wait(millis);}catch(Exception e){}
 					}
-					//TODO possibly redo this part
-					//try{Thread.sleep(millis);}catch(Exception e){}
-					long expected = System.currentTimeMillis() + millis;
-					while(System.currentTimeMillis() < expected)
-						continue;
 					break;
 				case "scene":
 					String[] nameAndTags = line.replaceAll(" {2,}", " ").split(" ");
@@ -294,6 +295,8 @@ public class LabelInterpreter
 				default:
 					System.err.println("Unknown command: " + start + " " + line);
 				}
+				while(GUI.updating())
+					continue;
 			}
 			
 			if(script.hasNextLabel())

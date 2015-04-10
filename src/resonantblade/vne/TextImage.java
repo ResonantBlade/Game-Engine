@@ -1,11 +1,15 @@
 package resonantblade.vne;
 
+import java.awt.Color;
 import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.font.FontRenderContext;
+import java.awt.font.TextLayout;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 
+import resonantblade.vne.gui.GUI;
 import resonantblade.vne.script.ScriptUtils;
 import resonantblade.vne.script.ScriptUtils.Quote;
 
@@ -38,12 +42,31 @@ public class TextImage extends Image
 			}
 		}
 		
+		String[] texta = text.split("\n");
+		int width = 0;
+		int height = 0;
+		int heightMod = 0;
 		Font font = FontHandler.getFont(fontLocStr).deriveFont((float) size);
 		FontRenderContext frc = new FontRenderContext(null, true, true);
-		Rectangle2D bounds = font.getStringBounds(text, frc);
-		image = new BufferedImage((int) bounds.getWidth(), (int) bounds.getHeight(), BufferedImage.TYPE_INT_ARGB);
+		TextLayout tl = new TextLayout(text, font, frc);
+		height = (int) tl.getBounds().getHeight();
+		heightMod = (int) Math.ceil(tl.getAscent() + tl.getDescent());
+		for(String str : texta)
+		{
+			tl = new TextLayout(str, font, frc);
+			Rectangle2D bounds = tl.getBounds();
+			width = (int) Math.max(width, bounds.getWidth());
+		}
+		width = (int) Math.min(width * 1.2D, GUI.WIDTH);
+		image = new BufferedImage(width, height * texta.length + heightMod, BufferedImage.TYPE_INT_ARGB);
 		Graphics2D g = image.createGraphics();
-		g.drawString(text, 0, 0);
+		g.setColor(Color.WHITE);
+		g.setFont(font);
+		FontMetrics fm = g.getFontMetrics();
+		for(int i = 0; i < texta.length; i++)
+		{
+			g.drawString(texta[i], (width - fm.stringWidth(texta[i])) / 2, (i + 1) * height + fm.getAscent());
+		}
 	}
 	
 	@Override

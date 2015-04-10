@@ -16,6 +16,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import resonantblade.vne.Image;
+import resonantblade.vne.UserInputListener;
 import resonantblade.vne.script.ScriptInterpreter.Character;
 
 public class GUI
@@ -33,6 +34,8 @@ public class GUI
 	private volatile BufferedImage buffer;
 	private FPSController fpsController;
 	public static volatile boolean[] changingLayer = new boolean[5];
+	
+	public static final Object userInteractLock = new Object();
 	
 	public GUI(FPSController fpscon)
 	{
@@ -55,6 +58,12 @@ public class GUI
 			}
 		};
 		frame.getContentPane().add(panel);
+		
+		UserInputListener uil = new UserInputListener();
+		frame.addKeyListener(uil);
+		frame.addMouseListener(uil);
+		frame.addMouseMotionListener(uil);
+		frame.addMouseWheelListener(uil);
 		//TODO add key and mouse listeners
 		
 		frame.validate();
@@ -170,9 +179,12 @@ public class GUI
 				{
 					ease = Double.parseDouble(transitions[i + 1]);
 				}
-				if(transitions[i].equals("fade") && i != transitions.length - 1)
+				if(transitions[i].equals("fade"))
 				{
-					current.fade(Double.parseDouble(transitions[i + 1]), true);
+					if(i != transitions.length - 1)
+						current.fade(Double.parseDouble(transitions[i + 1]), true);
+					else
+						current.fade(1.0D, true);
 				}
 			}
 			if(ease == 0.0D)
@@ -191,19 +203,44 @@ public class GUI
 			current = new ImageDisplayable(img, position, transitions);
 			for(int i = 0; i < transitions.length; i++)
 			{
-				if(transitions[i].equals("fade") && i != transitions.length - 1)
+				if(transitions[i].equals("fade"))
 				{
-					// TODO images seem to not show when fading in. Maybe the fading mechanism is off?
-					current.fade(Double.parseDouble(transitions[i + 1]), true);
+					if(i != transitions.length - 1)
+						current.fade(Double.parseDouble(transitions[i + 1]), true);
+					else
+						current.fade(1.0D, true);
 				}
 			}
 			sprites.add(current);
 		}
+		changingLayer[2] = true;
 	}
 	
 	public static void hideImage(Image img, String[] transitions)
 	{
-		// TODO
+		Displayable current = sprites.stream().filter(displayable -> displayable.getImage().tagsAreSame(img.getTags())).findFirst().orElse(null);
+		if(current != null)
+		{
+			for(int i = 0; i < transitions.length; i++)
+			{
+				if(transitions[i].equals("fade"))
+				{
+					if(i != transitions.length - 1)
+						current.fade(Double.parseDouble(transitions[i + 1]), false);
+					else
+						current.fade(1.0D, false);
+				}
+			}
+		}
+		changingLayer[2] = true;
+	}
+	
+	public static boolean updating()
+	{
+		for(boolean b : changingLayer)
+			if(b)
+				return true;
+		return false;
 	}
 	
 	/**
