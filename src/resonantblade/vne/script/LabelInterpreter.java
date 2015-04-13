@@ -203,7 +203,7 @@ public class LabelInterpreter
 				case "scene":
 					String[] nameAndTags = line.replaceAll(" {2,}", " ").split(" ");
 					String name = nameAndTags[0];
-					String[] tags = Arrays.copyOfRange(nameAndTags, 1, nameAndTags.length);
+					String[] tags = nameAndTags;
 					nameAndTags = null;
 					int withIndex = 0;
 					while(withIndex < tags.length - 1)
@@ -263,14 +263,14 @@ public class LabelInterpreter
 					}
 					
 					name = line.substring(0, line.indexOf(" ") != -1 ? line.indexOf(" ") : line.length());
-					line = line.substring(name.length()).trim();
+					//line = line.substring(name.length()).trim();
 					tags = line.replaceAll(" {2,}", " ").split(" ");
 					GUI.showImage(ScriptInterpreter.images.get(name, Arrays.asList(tags)), new Point3D(x, y, z), transitions);
 					break;
 				case "hide":
 					nameAndTags = line.replaceAll(" {2,}", " ").split(" ");
 					name = nameAndTags[0];
-					tags = Arrays.copyOfRange(nameAndTags, 1, nameAndTags.length);
+					tags = nameAndTags;
 					nameAndTags = null;
 					transitions = new String[0];
 					withIndex = 0;

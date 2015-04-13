@@ -110,10 +110,14 @@ public class GUI
 		background.paint(g);
 		if(!changingLayer[0])
 		{
-			battle.forEach(displayable -> displayable.paint(g));
-			sprites.forEach(displayable -> displayable.paint(g));
-			screen.forEach(displayable -> displayable.paint(g));
-			overlay.forEach(displayable -> displayable.paint(g));
+			IterationTools.forEach(battle, displayable -> displayable.paint(g));
+			IterationTools.forEach(sprites, displayable -> displayable.paint(g));
+			IterationTools.forEach(screen, displayable -> displayable.paint(g));
+			IterationTools.forEach(overlay, displayable -> displayable.paint(g));
+			//battle.forEach(displayable -> displayable.paint(g));
+			//sprites.forEach(displayable -> displayable.paint(g));
+			//screen.forEach(displayable -> displayable.paint(g));
+			//overlay.forEach(displayable -> displayable.paint(g));
 		}
 		g.dispose();
 	}
@@ -175,9 +179,12 @@ public class GUI
 			double ease = 0.0D;
 			for(int i = 0; i < transitions.length; i++)
 			{
-				if(transitions[i].trim().equals("ease") && i != transitions.length - 1)
+				if(transitions[i].equals("ease"))
 				{
-					ease = Double.parseDouble(transitions[i + 1]);
+					if(i != transitions.length - 1)
+						ease = Double.parseDouble(transitions[i + 1]);
+					else
+						ease = 1.0D;
 				}
 				if(transitions[i].equals("fade"))
 				{

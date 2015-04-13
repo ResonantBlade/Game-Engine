@@ -56,7 +56,7 @@ public abstract class Displayable
 	public void moveTo(Point3D newPosition, double seconds)
 	{
 		Point3D delta = newPosition.subtract(position);
-		double amt = Math.ceil(seconds * 100.0D / FPSController.REFRESH_INTERVAL_MS);
+		double amt = Math.ceil(seconds * 1000.0D / FPSController.REFRESH_INTERVAL_MS);
 		deltaPosition = delta.multiply(1.0D / amt);
 		this.moveAmt = (int) amt;
 	}

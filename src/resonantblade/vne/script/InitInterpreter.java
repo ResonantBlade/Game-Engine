@@ -66,7 +66,7 @@ public class InitInterpreter
 				line = line.substring(0, path.startIndex).trim();
 				String[] lineData = line.split(" ");
 				String name = lineData[0];
-				images.put(name, new Image(path.quoteText, Arrays.copyOfRange(lineData, 1, lineData.length)));
+				images.put(name, new Image(path.quoteText, lineData));
 				break;
 			case "TextImage":
 				path = ScriptUtils.nextQuote(line);
@@ -74,7 +74,7 @@ public class InitInterpreter
 				line = line.substring(0, path.startIndex).trim();
 				lineData = line.split(" ");
 				name = lineData[0];
-				images.put(name, new TextImage(path.quoteText, modifiers, Arrays.copyOfRange(lineData, 1, lineData.length)));
+				images.put(name, new TextImage(path.quoteText, modifiers, lineData));
 				break;
 			case "Audio":
 				path = ScriptUtils.nextQuote(line);
