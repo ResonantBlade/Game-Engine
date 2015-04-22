@@ -49,7 +49,7 @@ public class JSInterpreter
 		}
 		catch(Exception e)
 		{
-			throw new IllegalStateException("Failed to evaluate statement: " + data);
+			throw new RuntimeException(e.getMessage(), e);
 		}
 	}
 	

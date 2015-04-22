@@ -316,6 +316,18 @@ public class LabelInterpreter
 						throw new IllegalStateException("Unknown layer command");
 					}
 					break;
+				case "script":
+					int count = 1;
+					while(!script.nextLine().trim().startsWith("end_script"))
+						count++;
+					String[] stra = new String[count - 1];
+					for(int i = 0; i < count; i++)
+						script.rollback();
+					for(int i = 0; i < count - 1; i++)
+						stra[i] = script.nextLine();
+					script.nextLine();
+					JSInterpreter.eval(stra);
+					break;
 				// TODO variables, menu, screen
 				default:
 					System.err.println("Unknown command: " + start + " " + line);

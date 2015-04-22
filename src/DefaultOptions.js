@@ -1,6 +1,6 @@
 function print(data)
 {
-	Java.tyoe("java.lang.System").out.println(data)
+	Java.type("java.lang.System").out.println(data)
 }
 
 var config = new Object()

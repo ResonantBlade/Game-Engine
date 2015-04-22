@@ -9,7 +9,6 @@ import java.util.Arrays;
 import java.util.Stack;
 
 import resonantblade.vne.Image;
-import resonantblade.vne.Properties;
 import resonantblade.vne.TextImage;
 import resonantblade.vne.script.ScriptInterpreter.Character;
 import resonantblade.vne.script.ScriptUtils.Quote;
