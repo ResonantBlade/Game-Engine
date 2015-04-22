@@ -21,8 +21,9 @@ public class InitInterpreter
 		Stack<Integer> scope = new Stack<Integer>();
 		int curIndent = 0;
 		
-		for(String line : script)
+		for(int i = 0; i < script.length; i++)
 		{
+			String line = script[i];
 			int indent = 0;
 			while(line.charAt(indent) == ' ')
 				indent++;
@@ -83,10 +84,21 @@ public class InitInterpreter
 					throw new IllegalStateException("Audio identifiers cannot contain spaces");
 				audio.put(identifier, new File(path.quoteText));
 				break;
-			case "title":
-				Quote title = ScriptUtils.nextQuote(line);
-				if(title != null)
-					Properties.setGUITitle(title.quoteText);
+			//case "title":
+			//	Quote title = ScriptUtils.nextQuote(line);
+			//	if(title != null)
+			//		Properties.setGUITitle(title.quoteText);
+			//	break;
+			case "script":
+				for(int j = i + 1; j < script.length; j++)
+				{
+					if(script[j].trim().startsWith("end_script"))
+					{
+						JSInterpreter.eval(Arrays.copyOfRange(script, i + 1, j));
+						i = j;
+						break;
+					}
+				}
 				break;
 			default:
 				throw new IllegalStateException("Unknown data in init: " + start);

@@ -16,10 +16,11 @@ public abstract class Displayable
 	protected int fadeAmt = 0;
 	protected String[] transitions;
 	
-	public Displayable(Image image, Point3D position, String... transitions)
+	public Displayable(Image image, Point3D position, float alpha, String... transitions)
 	{
 		this.image = image;
 		this.position = position;
+		this.alpha = alpha;
 		this.transitions = transitions;
 	}
 	

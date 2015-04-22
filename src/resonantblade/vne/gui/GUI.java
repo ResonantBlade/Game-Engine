@@ -17,12 +17,13 @@ import javax.swing.JPanel;
 
 import resonantblade.vne.Image;
 import resonantblade.vne.UserInputListener;
+import resonantblade.vne.script.JSInterpreter;
 import resonantblade.vne.script.ScriptInterpreter.Character;
 
 public class GUI
 {
-	public static final int WIDTH = 1920;
-	public static final int HEIGHT = 1080;
+	public static int WIDTH = 1920;
+	public static int HEIGHT = 1080;
 	
 	private static volatile SceneBG background = SceneBG.BLANK;
 	private static volatile List<Displayable> battle = new ArrayList<Displayable>();
@@ -34,14 +35,17 @@ public class GUI
 	private volatile BufferedImage buffer;
 	private FPSController fpsController;
 	public static volatile boolean[] changingLayer = new boolean[5];
+	public static volatile boolean[] isLayerVisible = new boolean[]{true, true, true, true, true};
 	
 	public static final Object userInteractLock = new Object();
 	
-	public GUI(FPSController fpscon)
+	public GUI(String title, FPSController fpscon)
 	{
 		fpsController = fpscon;
-		buffer = new BufferedImage(1920, 1080, BufferedImage.TYPE_INT_ARGB);
-		frame = new JFrame("ADF");
+		WIDTH = (int) JSInterpreter.eval("config.screen_width");
+		HEIGHT = (int) JSInterpreter.eval("config.screen_height");
+		buffer = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_ARGB);
+		frame = new JFrame(title);
 		frame.setSize(960, 540);
 		frame.setLocationRelativeTo(null);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -81,26 +85,36 @@ public class GUI
 		{
 			background.fade();
 			changingLayer[0] = background.changing();
+			if(isLayerVisible[0])
+				return;
 		}
-		else if(changingLayer[1])
+		if(changingLayer[1])
 		{
 			changingLayer[1] = battle.stream().map(Displayable::changing).anyMatch(Boolean::booleanValue);
+			if(isLayerVisible[1])
+				return;
 		}
-		else if(changingLayer[2])
+		if(changingLayer[2])
 		{
 			sprites.forEach(d -> {
 				d.move();
 				d.fade();
 			});
 			changingLayer[2] = sprites.stream().map(Displayable::changing).anyMatch(Boolean::booleanValue);
+			if(isLayerVisible[2])
+				return;
 		}
-		else if(changingLayer[3])
+		if(changingLayer[3])
 		{
 			changingLayer[3] = screen.stream().map(Displayable::changing).anyMatch(Boolean::booleanValue);
+			if(isLayerVisible[3])
+				return;
 		}
-		else if(changingLayer[4])
+		if(changingLayer[4])
 		{
 			changingLayer[4] = overlay.stream().map(Displayable::changing).anyMatch(Boolean::booleanValue);
+			if(isLayerVisible[4])
+				return;
 		}
 	}
 	
@@ -108,12 +122,16 @@ public class GUI
 	{
 		Graphics2D g = buffer.createGraphics();
 		background.paint(g);
-		if(!changingLayer[0])
+		if(!changingLayer[0] && isLayerVisible[0])
 		{
-			IterationTools.forEach(battle, displayable -> displayable.paint(g));
-			IterationTools.forEach(sprites, displayable -> displayable.paint(g));
-			IterationTools.forEach(screen, displayable -> displayable.paint(g));
-			IterationTools.forEach(overlay, displayable -> displayable.paint(g));
+			if(isLayerVisible[1])
+				IterationTools.forEach(battle, displayable -> displayable.paint(g));
+			if(isLayerVisible[2])
+				IterationTools.forEach(sprites, displayable -> displayable.paint(g));
+			if(isLayerVisible[3])
+				IterationTools.forEach(screen, displayable -> displayable.paint(g));
+			if(isLayerVisible[4])
+				IterationTools.forEach(overlay, displayable -> displayable.paint(g));
 			//battle.forEach(displayable -> displayable.paint(g));
 			//sprites.forEach(displayable -> displayable.paint(g));
 			//screen.forEach(displayable -> displayable.paint(g));
@@ -163,7 +181,17 @@ public class GUI
 		overlay.clear();
 	}
 	
-	public static void showImage(Image img, Point3D position, String... transitions)
+	public static void showLayer(int layer)
+	{
+		isLayerVisible[layer] = true;
+	}
+	
+	public static void hideLayer(int layer)
+	{
+		isLayerVisible[layer] = false;
+	}
+	
+	public static void showImage(Image img, Point3D position, float alpha, String... transitions)
 	{
 		Displayable current = sprites.stream().filter(displayable -> displayable.getImage().tagsAreSame(img.getTags())).findFirst().orElse(null);
 		if(current != null)
@@ -207,7 +235,7 @@ public class GUI
 				position = new Point3D(position.getX(), 0.5D, position.getZ());
 			if(Double.isNaN(position.getZ()))
 				position = new Point3D(position.getX(), position.getY(), 1.0D);
-			current = new ImageDisplayable(img, position, transitions);
+			current = new ImageDisplayable(img, position, alpha, transitions);
 			for(int i = 0; i < transitions.length; i++)
 			{
 				if(transitions[i].equals("fade"))
@@ -244,8 +272,8 @@ public class GUI
 	
 	public static boolean updating()
 	{
-		for(boolean b : changingLayer)
-			if(b)
+		for(int i = 0; i < changingLayer.length; i++)
+			if(changingLayer[i] && isLayerVisible[i])
 				return true;
 		return false;
 	}

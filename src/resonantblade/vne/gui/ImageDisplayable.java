@@ -10,9 +10,9 @@ import javafx.geometry.Point3D;
 
 public class ImageDisplayable extends Displayable
 {
-	public ImageDisplayable(Image image, Point3D position, String... transitions)
+	public ImageDisplayable(Image image, Point3D position, float alpha, String... transitions)
 	{
-		super(image, position, transitions);
+		super(image, position, alpha, transitions);
 	}
 	
 	@Override

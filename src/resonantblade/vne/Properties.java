@@ -25,8 +25,11 @@ public class Properties
 	public static void setGUITitle(String name)
 	{
 		//...Or you could end up rushing around your ship, talikng to everyone merely to avoid paperwork of any kind.
-		if(VisualNovelEngine.gui != null)
+		new Thread(() -> {
+			while(VisualNovelEngine.gui == null)
+				try{Thread.sleep(1);}catch(Exception e){}
 			VisualNovelEngine.gui.setTitle(name);
+		}).start();
 	}
 	//...zipping to Research and Development, spending thousands (or millions if a scale is to be believed)...
 	//...rushing to the hangar to check on the mercs... running around avoiding the acting medical officer...
