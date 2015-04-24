@@ -41,11 +41,12 @@ public class JSInterpreter
 		}
 	}
 	
-	public static Object eval(String data)
+	@SuppressWarnings("unchecked")
+	public static <T> T eval(String data)
 	{
 		try
 		{
-			return engine.eval(data);
+			return (T) engine.eval(data);
 		}
 		catch(Exception e)
 		{

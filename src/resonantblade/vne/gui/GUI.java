@@ -5,6 +5,7 @@ import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -16,6 +17,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import resonantblade.vne.Image;
+import resonantblade.vne.Resources;
 import resonantblade.vne.UserInputListener;
 import resonantblade.vne.script.JSInterpreter;
 import resonantblade.vne.script.ScriptInterpreter.Character;
@@ -31,6 +33,16 @@ public class GUI
 	private static volatile List<Displayable> screen = new ArrayList<Displayable>();
 	private static volatile List<Displayable> overlay = new ArrayList<Displayable>();
 	
+	private volatile BufferedImage overlayBackground;
+	private volatile int overlayXMin;
+	private volatile int overlayYMin;
+	private volatile int overlayXMax;
+	private volatile int overlayYMax;
+	private volatile int overlayPaddingLeft;
+	private volatile int overlayPaddingRight;
+	private volatile int overlayPaddingTop;
+	private volatile int overlayPaddingBottom;
+	
 	private JFrame frame;
 	private volatile BufferedImage buffer;
 	private FPSController fpsController;
@@ -42,8 +54,21 @@ public class GUI
 	public GUI(String title, FPSController fpscon)
 	{
 		fpsController = fpscon;
-		WIDTH = (int) JSInterpreter.eval("config.screen_width");
-		HEIGHT = (int) JSInterpreter.eval("config.screen_height");
+		WIDTH = JSInterpreter.<Number>eval("config.screen_width").intValue();
+		HEIGHT = JSInterpreter.<Number>eval("config.screen_height").intValue();
+		
+		String bckgrnd = (String) JSInterpreter.eval("style.dialogue_window.background");
+		if(bckgrnd != null)
+			overlayBackground = Resources.loadImage(new File(bckgrnd));
+		overlayXMin = JSInterpreter.<Number>eval("style.dialogue_window.xMin").intValue();
+		overlayYMin = JSInterpreter.<Number>eval("style.dialogue_window.yMin").intValue();
+		overlayXMax = JSInterpreter.<Number>eval("style.dialogue_window.xMax").intValue();
+		overlayYMax = JSInterpreter.<Number>eval("style.dialogue_window.yMax").intValue();
+		overlayPaddingLeft = JSInterpreter.<Number>eval("style.dialogue_window.padding_left").intValue();
+		overlayPaddingRight = JSInterpreter.<Number>eval("style.dialogue_window.padding_right").intValue();
+		overlayPaddingTop = JSInterpreter.<Number>eval("style.dialogue_window.padding_top").intValue();
+		overlayPaddingBottom = JSInterpreter.<Number>eval("style.dialogue_window.padding_bottom").intValue();
+		
 		buffer = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_ARGB);
 		frame = new JFrame(title);
 		frame.setSize(960, 540);
