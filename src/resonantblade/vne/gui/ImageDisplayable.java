@@ -5,7 +5,7 @@ import java.awt.Composite;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
-import resonantblade.vne.Image;
+import resonantblade.vne.gui.displayable.Displayable;
 import javafx.geometry.Point3D;
 
 public class ImageDisplayable extends Displayable

@@ -1,10 +1,12 @@
-package resonantblade.vne;
+package resonantblade.vne.gui;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import resonantblade.vne.Resources;
 
 public class Image
 {

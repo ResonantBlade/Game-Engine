@@ -1,4 +1,4 @@
-package resonantblade.vne;
+package resonantblade.vne.gui;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -9,7 +9,7 @@ import java.awt.font.TextLayout;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 
-import resonantblade.vne.gui.GUI;
+import resonantblade.vne.FontHandler;
 import resonantblade.vne.script.ScriptUtils;
 import resonantblade.vne.script.ScriptUtils.Quote;
 

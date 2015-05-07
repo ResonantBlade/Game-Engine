@@ -16,13 +16,14 @@ import javafx.geometry.Point3D;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-import resonantblade.vne.Image;
 import resonantblade.vne.Resources;
-import resonantblade.vne.UserInputListener;
+import resonantblade.vne.gui.displayable.Displayable;
+import resonantblade.vne.gui.displayable.SceneBG;
+import resonantblade.vne.modules.vn.UserInputListener;
 import resonantblade.vne.script.JSInterpreter;
 import resonantblade.vne.script.ScriptInterpreter.Character;
 
-public class GUI
+public class oldGUI
 {
 	public static int WIDTH = 1920;
 	public static int HEIGHT = 1080;
@@ -51,7 +52,7 @@ public class GUI
 	
 	public static final Object userInteractLock = new Object();
 	
-	public GUI(String title, FPSController fpscon)
+	public oldGUI(String title, FPSController fpscon)
 	{
 		fpsController = fpscon;
 		WIDTH = JSInterpreter.<Number>eval("config.screen_width").intValue();

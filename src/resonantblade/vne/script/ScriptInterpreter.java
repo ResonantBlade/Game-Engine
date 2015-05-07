@@ -10,7 +10,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import resonantblade.vne.TaggedImageMap;
+import resonantblade.vne.gui.TaggedImageMap;
 
 public class ScriptInterpreter
 {

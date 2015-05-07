@@ -8,8 +8,8 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.Stack;
 
-import resonantblade.vne.Image;
-import resonantblade.vne.TextImage;
+import resonantblade.vne.gui.Image;
+import resonantblade.vne.gui.TextImage;
 import resonantblade.vne.script.ScriptInterpreter.Character;
 import resonantblade.vne.script.ScriptUtils.Quote;
 

@@ -1,4 +1,4 @@
-package resonantblade.vne.gui;
+package resonantblade.vne.gui.displayable;
 
 import java.awt.AlphaComposite;
 import java.awt.Color;
@@ -6,7 +6,9 @@ import java.awt.Composite;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
-import resonantblade.vne.Image;
+import resonantblade.vne.gui.GUI;
+import resonantblade.vne.gui.Image;
+import resonantblade.vne.gui.ImageDisplayable;
 import javafx.geometry.Point3D;
 
 public class SceneBG extends ImageDisplayable

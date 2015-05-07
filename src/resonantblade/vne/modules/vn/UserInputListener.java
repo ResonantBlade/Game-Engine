@@ -1,4 +1,4 @@
-package resonantblade.vne;
+package resonantblade.vne.modules.vn;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
