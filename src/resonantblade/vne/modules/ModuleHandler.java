@@ -81,6 +81,16 @@ public class ModuleHandler
 		layers.sort((l1, l2) -> Double.compare(l1.getPriority(), l2.getPriority()));
 	}
 	
+	public static void init()
+	{
+		loadedModules.stream().forEach(module -> module.init());
+	}
+	
+	public static void start()
+	{
+		loadedModules.parallelStream().forEach(module -> new Thread(() -> module.start()).start());
+	}
+	
 	public static void registerModule(Module module)
 	{
 		loadedModules.add(module);

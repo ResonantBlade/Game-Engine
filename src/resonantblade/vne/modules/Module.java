@@ -12,4 +12,6 @@ public interface Module
 	List<Interpreter> getInterpreters();
 	List<Layer> getLayers();
 	List<EventListener> getListeners();
+	void init();
+	void start();
 }

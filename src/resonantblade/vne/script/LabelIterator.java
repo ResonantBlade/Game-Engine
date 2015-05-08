@@ -35,21 +35,4 @@ public class LabelIterator
 		}
 		return false;
 	}
-	
-	public boolean hasNextLabel()
-	{
-		return label.next != null;
-	}
-	
-	public LabelIterator nextLabel()
-	{
-		if(label.next == null)
-			return null;
-		return new LabelIterator(label.next);
-	}
-	
-	public boolean hasMoreContent()
-	{
-		return hasNextLine() || hasNextLabel();
-	}
 }

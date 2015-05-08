@@ -21,7 +21,7 @@ import resonantblade.vne.gui.displayable.Displayable;
 import resonantblade.vne.gui.displayable.SceneBG;
 import resonantblade.vne.modules.vn.UserInputListener;
 import resonantblade.vne.script.JSInterpreter;
-import resonantblade.vne.script.ScriptInterpreter.Character;
+import resonantblade.vne.script.LabelLoader.Character;
 
 public class oldGUI
 {

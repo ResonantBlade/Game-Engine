@@ -1,38 +1,72 @@
-package resonantblade.vne.script;
-
-import static resonantblade.vne.script.ScriptInterpreter.audio;
-import static resonantblade.vne.script.ScriptInterpreter.characters;
+package resonantblade.vne.modules.vn;
 
 import java.awt.Color;
 import java.io.File;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Stack;
 
 import javafx.geometry.Point3D;
 import resonantblade.vne.audio.AudioSystem;
 import resonantblade.vne.gui.GUI;
-import resonantblade.vne.script.ScriptInterpreter.Character;
-import resonantblade.vne.script.ScriptInterpreter.Label;
+import resonantblade.vne.script.Interpreter;
+import resonantblade.vne.script.JSInterpreter;
+import resonantblade.vne.script.Label;
+import resonantblade.vne.script.LabelIterator;
+import resonantblade.vne.script.ScriptUtils;
 import resonantblade.vne.script.ScriptUtils.Quote;
 
-public class LabelInterpreter
+public class ScriptInterpreter implements Interpreter
 {
-	public static final LabelInterpreter INSTANCE = new LabelInterpreter();
+	private HashMap<String, Label> labels = new HashMap<String, Label>();
 	
-	protected static void interpretLabel(Label label)
+	@Override
+	public List<String> getLabelHeaders()
 	{
-		while(INSTANCE.interpretLabel(new LabelIterator(label), false))
-			continue;
-		System.out.println("Game has exited");
+		return Arrays.asList(new String[]{"script"});
 	}
 	
-	protected static boolean interpretLabelSingle(Label label)
+	@Override
+	public boolean hasLabel(String labelName)
 	{
-		return INSTANCE.interpretLabel(new LabelIterator(label), true);
+		return labels.containsKey(labelName);
+	}
+	
+	@Override
+	public void addLabel(Label label)
+	{
+		labels.put(label.name, label);
+	}
+	
+	@Override
+	public void jump(String labelName)
+	{
+		interpret(labelName);
+	}
+	
+	@Override
+	public void call(String labelName)
+	{
+		interpret(labelName);
+	}
+	
+	@Override
+	public void interpret(String labelName)
+	{
+		if(hasLabel(labelName))
+		{
+			boolean restart = interpretLabel(new LabelIterator(labels.get(labelName)));
+			System.out.println("Game has exited");
+		}
+		else
+		{
+			throw new IllegalStateException(String.format("Label \"%s\" does not exist", labelName));
+		}
 	}
 	
 	@SuppressWarnings("unchecked")
-	private boolean interpretLabel(LabelIterator script, boolean single)
+	private boolean interpretLabel(LabelIterator script)
 	{
 		Stack<Object> labelStack = new Stack<Object>();
 		
@@ -42,15 +76,12 @@ public class LabelInterpreter
 			Stack<Integer> scope = new Stack<Integer>();
 			int curIndent = 0;
 			
-			while(!script.hasMoreContent())
+			while(!script.hasNextLine())
 			{
 				if(labelStack.isEmpty())
 				{
-					if(single)
-						return true;
-					
-					System.err.println("LabelStack was empty. Falling back to start");
-					script = new LabelIterator(ScriptInterpreter.script.get("start"));
+					System.err.println("LabelStack was empty. This should jump back to the start");
+					script = new LabelIterator(labels.get("start"));
 					curIndent = 0;
 					scope.clear();
 					break;
@@ -87,7 +118,7 @@ public class LabelInterpreter
 						throw new IllegalStateException("ERROR: Indents are misaligned");
 				}
 				
-				line = cleanComments(line).trim();
+				line = ScriptUtils.cleanComments(line).trim();
 				System.out.println("Now on line: " + line);
 				String start = line.substring(0, line.indexOf(' ') == -1 ? line.length() : line.indexOf(' '));
 				line = line.substring(start.length()).trim();
@@ -112,23 +143,16 @@ public class LabelInterpreter
 					else
 					{
 						String name = line.substring(0, text.startIndex).trim();
-						Character charr = characters.get(name);
+						Character charr = VisualNovelModule.characters.get(name);
 						GUI.say(charr, text.quoteText);
 					}
-					break;
-				case "jump":
-					labelStack.push(script);
-					labelStack.push(scope);
-					labelStack.push(curIndent);
-					
-					script = new LabelIterator(ScriptInterpreter.script.get(line), script.isCallStatement());
 					break;
 				case "call":
 					labelStack.push(script);
 					labelStack.push(scope);
 					labelStack.push(curIndent);
-					
-					script = new LabelIterator(ScriptInterpreter.script.get(line), true);
+				case "jump":
+					script = new LabelIterator(labels.get(line));
 					break;
 				case "play":
 					String type = line.substring(0, line.indexOf(" "));
@@ -153,7 +177,7 @@ public class LabelInterpreter
 					else
 					{
 						String file = line.substring(0, line.indexOf(" ") == -1 ? line.length() : line.indexOf(" "));
-						File audioFile = audio.get(file);
+						File audioFile = VisualNovelModule.audio.get(file);
 						line = line.substring(file.length()).trim();
 						boolean loop = line.contains("loop");
 						boolean fade = false;
@@ -214,7 +238,7 @@ public class LabelInterpreter
 					}
 					String[] transitions = Arrays.copyOfRange(tags, withIndex + 1, tags.length);
 					tags = Arrays.copyOfRange(tags, 0, withIndex == tags.length - 1 ? tags.length : withIndex);
-					GUI.changeScene(ScriptInterpreter.images.get(name, Arrays.asList(tags)), transitions);
+					GUI.changeScene(VisualNovelModule.images.get(name, Arrays.asList(tags)), transitions);
 					break;
 				case "show":
 					double x = Double.NaN;
@@ -276,7 +300,7 @@ public class LabelInterpreter
 					name = line.substring(0, line.indexOf(" ") != -1 ? line.indexOf(" ") : line.length());
 					//line = line.substring(name.length()).trim();
 					tags = line.replaceAll(" {2,}", " ").split(" ");
-					GUI.showImage(ScriptInterpreter.images.get(name, Arrays.asList(tags)), new Point3D(x, y, z), alpha, transitions);
+					GUI.showImage(VisualNovelModule.images.get(name, Arrays.asList(tags)), new Point3D(x, y, z), alpha, transitions);
 					break;
 				case "hide":
 					nameAndTags = line.replaceAll(" {2,}", " ").split(" ");
@@ -296,7 +320,7 @@ public class LabelInterpreter
 						transitions = Arrays.copyOfRange(tags, withIndex + 1, tags.length);
 						tags = Arrays.copyOfRange(tags, 0, withIndex == tags.length - 1 ? tags.length : withIndex);
 					}
-					GUI.hideImage(ScriptInterpreter.images.get(name, Arrays.asList(tags)), transitions);
+					GUI.hideImage(VisualNovelModule.images.get(name, Arrays.asList(tags)), transitions);
 					break;
 				case "quit":
 					if(!Boolean.parseBoolean(line))
@@ -335,15 +359,6 @@ public class LabelInterpreter
 				while(GUI.updating())
 					continue;
 			}
-			
-			if(script.hasNextLabel())
-			{
-				labelStack.push(script);
-				labelStack.push(scope);
-				labelStack.push(curIndent);
-				
-				script = script.nextLabel();
-			}
 		}
 		
 		if(!restart)
@@ -353,96 +368,5 @@ public class LabelInterpreter
 		}
 		
 		return restart;
-	}
-	
-	private static String cleanComments(String line)
-	{
-		int index = 0;
-		boolean found = false;
-		while(!found && index < line.length())
-		{
-			while(index < line.length() && line.charAt(index) != '#')
-				index++;
-			int count = 0;
-			for(int i = 0; i < index; i++)
-			{
-				if(line.charAt(i) == '\"')
-					count++;
-			}
-			if(count % 2 == 0)
-				found = true;
-		}
-		
-		return line.substring(0, index);
-	}
-	
-	private static class LabelIterator
-	{
-		private Label label;
-		private int index;
-		private boolean jumped;
-		private boolean callStatement;
-		
-		public LabelIterator(Label label, boolean callStatement)
-		{
-			this.label = label;
-			index = -1;
-			jumped = false;
-			this.callStatement = callStatement;
-		}
-		
-		public LabelIterator(Label label)
-		{
-			this(label, false);
-		}
-		
-		public boolean hasNextLine()
-		{
-			return label != null && index < label.data.length - 1;
-		}
-		
-		public String nextLine()
-		{
-			return label.data[++index];
-		}
-		
-		public String currentLine()
-		{
-			return index < 0 ? null : label.data[index];
-		}
-		
-		public boolean rollback()
-		{
-			if(index >= 0)
-			{
-				index--;
-				return true;
-			}
-			return false;
-		}
-		
-		public boolean hasNextLabel()
-		{
-			return label != null && label.next != null && !callStatement;
-		}
-		
-		public LabelIterator nextLabel()
-		{
-			if(callStatement)
-				return null;
-			
-			jumped = true;
-			return new LabelIterator(label.next);
-		}
-		
-		public boolean hasMoreContent()
-		{
-			return hasNextLine() || (hasNextLabel() && !jumped);
-		}
-		
-		public boolean isCallStatement()
-		{
-			return callStatement;
-		}
 	}
 }

@@ -7,7 +7,7 @@ import resonantblade.vne.gui.FPSController;
 import resonantblade.vne.gui.GUI;
 import resonantblade.vne.modules.ModuleHandler;
 import resonantblade.vne.script.JSInterpreter;
-import resonantblade.vne.script.ScriptInterpreter;
+import resonantblade.vne.script.LabelLoader;
 
 public class VisualNovelEngine
 {
@@ -18,8 +18,8 @@ public class VisualNovelEngine
 		URL url = ClassLoader.getSystemClassLoader().getResource("DefaultOptions.js");
 		JSInterpreter.eval(new URLReader(url));
 		ModuleHandler.loadModules();
-		ScriptInterpreter.load();
-		ScriptInterpreter.init();
+		LabelLoader.load();
+		ModuleHandler.init();
 		
 		java.awt.EventQueue.invokeLater(new Runnable() {
             @Override
@@ -29,6 +29,6 @@ public class VisualNovelEngine
             }
         });
 		
-		ScriptInterpreter.start();
+		ModuleHandler.start();
 	}
 }
