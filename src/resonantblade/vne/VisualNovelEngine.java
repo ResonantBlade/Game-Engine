@@ -6,6 +6,7 @@ import jdk.nashorn.api.scripting.URLReader;
 import resonantblade.vne.gui.FPSController;
 import resonantblade.vne.gui.GUI;
 import resonantblade.vne.modules.ModuleHandler;
+import resonantblade.vne.modules.vn.VisualNovelModule;
 import resonantblade.vne.script.JSInterpreter;
 import resonantblade.vne.script.LabelLoader;
 
@@ -18,6 +19,7 @@ public class VisualNovelEngine
 		URL url = ClassLoader.getSystemClassLoader().getResource("DefaultOptions.js");
 		JSInterpreter.eval(new URLReader(url));
 		ModuleHandler.loadModules();
+		ModuleHandler.registerModule(new VisualNovelModule());
 		LabelLoader.load();
 		ModuleHandler.init();
 		
