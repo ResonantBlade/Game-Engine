@@ -17,8 +17,10 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import resonantblade.vne.Resources;
-import resonantblade.vne.gui.displayable.Displayable;
-import resonantblade.vne.gui.displayable.SceneBG;
+import resonantblade.vne.modules.vn.Displayable;
+import resonantblade.vne.modules.vn.Image;
+import resonantblade.vne.modules.vn.ImageDisplayable;
+import resonantblade.vne.modules.vn.SceneBG;
 import resonantblade.vne.modules.vn.UserInputListener;
 import resonantblade.vne.script.JSInterpreter;
 import resonantblade.vne.script.LabelLoader.Character;

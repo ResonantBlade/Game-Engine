@@ -1,4 +1,4 @@
-package resonantblade.vne.gui;
+package resonantblade.vne.modules.vn;
 
 import java.awt.image.BufferedImage;
 import java.io.File;

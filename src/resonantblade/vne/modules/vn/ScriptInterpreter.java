@@ -20,6 +20,12 @@ import resonantblade.vne.script.ScriptUtils.Quote;
 public class ScriptInterpreter implements Interpreter
 {
 	private HashMap<String, Label> labels = new HashMap<String, Label>();
+	private VisualNovelModule core;
+	
+	public ScriptInterpreter(VisualNovelModule core)
+	{
+		this.core = core;
+	}
 	
 	@Override
 	public List<String> getLabelHeaders()
@@ -133,18 +139,18 @@ public class ScriptInterpreter implements Interpreter
 						text = ScriptUtils.nextQuote(line);
 						if(text != null)
 						{
-							GUI.say(name, Color.BLACK, text.quoteText);
+							core.say(name, Color.BLACK, text.quoteText);
 						}
 						else
 						{
-							GUI.say("", Color.BLACK, name);
+							core.say("", Color.BLACK, name);
 						}
 					}
 					else
 					{
 						String name = line.substring(0, text.startIndex).trim();
 						Character charr = VisualNovelModule.characters.get(name);
-						GUI.say(charr, text.quoteText);
+						core.say(charr, text.quoteText);
 					}
 					break;
 				case "call":
@@ -238,7 +244,7 @@ public class ScriptInterpreter implements Interpreter
 					}
 					String[] transitions = Arrays.copyOfRange(tags, withIndex + 1, tags.length);
 					tags = Arrays.copyOfRange(tags, 0, withIndex == tags.length - 1 ? tags.length : withIndex);
-					GUI.changeScene(VisualNovelModule.images.get(name, Arrays.asList(tags)), transitions);
+					core.changeScene(VisualNovelModule.images.get(name, Arrays.asList(tags)), transitions);
 					break;
 				case "show":
 					double x = Double.NaN;
@@ -300,7 +306,7 @@ public class ScriptInterpreter implements Interpreter
 					name = line.substring(0, line.indexOf(" ") != -1 ? line.indexOf(" ") : line.length());
 					//line = line.substring(name.length()).trim();
 					tags = line.replaceAll(" {2,}", " ").split(" ");
-					GUI.showImage(VisualNovelModule.images.get(name, Arrays.asList(tags)), new Point3D(x, y, z), alpha, transitions);
+					core.showImage(VisualNovelModule.images.get(name, Arrays.asList(tags)), new Point3D(x, y, z), alpha, transitions);
 					break;
 				case "hide":
 					nameAndTags = line.replaceAll(" {2,}", " ").split(" ");
@@ -320,7 +326,7 @@ public class ScriptInterpreter implements Interpreter
 						transitions = Arrays.copyOfRange(tags, withIndex + 1, tags.length);
 						tags = Arrays.copyOfRange(tags, 0, withIndex == tags.length - 1 ? tags.length : withIndex);
 					}
-					GUI.hideImage(VisualNovelModule.images.get(name, Arrays.asList(tags)), transitions);
+					core.hideImage(VisualNovelModule.images.get(name, Arrays.asList(tags)), transitions);
 					break;
 				case "quit":
 					if(!Boolean.parseBoolean(line))
@@ -329,11 +335,11 @@ public class ScriptInterpreter implements Interpreter
 				case "layer":
 					if(line.startsWith("show"))
 					{
-						GUI.showLayer(Integer.parseInt(line.substring(4).trim()));
+						core.showLayer(line.substring(4).trim());
 					}
 					else if(line.startsWith("hide"))
 					{
-						GUI.hideLayer(Integer.parseInt(line.substring(4).trim()));
+						core.hideLayer(line.substring(4).trim());
 					}
 					else
 					{
@@ -356,7 +362,7 @@ public class ScriptInterpreter implements Interpreter
 				default:
 					System.err.println("Unknown command: " + start + " " + line);
 				}
-				while(GUI.updating())
+				while(core.updating())
 					continue;
 			}
 		}

@@ -1,4 +1,4 @@
-package resonantblade.vne.gui;
+package resonantblade.vne.modules.vn;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -10,6 +10,7 @@ import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 
 import resonantblade.vne.FontHandler;
+import resonantblade.vne.gui.GUI;
 import resonantblade.vne.script.ScriptUtils;
 import resonantblade.vne.script.ScriptUtils.Quote;
 
@@ -65,7 +66,7 @@ public class TextImage extends Image
 		FontMetrics fm = g.getFontMetrics();
 		for(int i = 0; i < texta.length; i++)
 		{
-			g.drawString(texta[i], (width - fm.stringWidth(texta[i])) / 2, (i + 1) * height + fm.getAscent());
+			g.drawString(texta[i], (int) ((width - fm.stringWidth(texta[i])) * textAlign), (i + 1) * height + fm.getAscent());
 		}
 	}
 	

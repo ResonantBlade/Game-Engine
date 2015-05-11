@@ -6,8 +6,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Stack;
 
-import resonantblade.vne.gui.Image;
-import resonantblade.vne.gui.TextImage;
 import resonantblade.vne.script.Interpreter;
 import resonantblade.vne.script.JSInterpreter;
 import resonantblade.vne.script.Label;
@@ -17,6 +15,12 @@ import resonantblade.vne.script.ScriptUtils.Quote;
 public class InitInterpreter implements Interpreter
 {
 	private List<InitLabel> labels = new ArrayList<InitLabel>();
+	private VisualNovelModule core;
+	
+	public InitInterpreter(VisualNovelModule core)
+	{
+		this.core = core;
+	}
 	
 	@Override
 	public List<String> getLabelHeaders()

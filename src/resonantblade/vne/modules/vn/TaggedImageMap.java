@@ -1,4 +1,4 @@
-package resonantblade.vne.gui;
+package resonantblade.vne.modules.vn;
 
 import java.util.ArrayList;
 import java.util.HashMap;

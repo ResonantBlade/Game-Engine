@@ -1,9 +1,8 @@
-package resonantblade.vne.gui.displayable;
+package resonantblade.vne.modules.vn;
 
 import java.awt.Graphics2D;
 
 import resonantblade.vne.gui.FPSController;
-import resonantblade.vne.gui.Image;
 import javafx.geometry.Point3D;
 
 public abstract class Displayable
