@@ -11,6 +11,7 @@ public interface Layer
 	double getPriority();
 	void paint(Graphics2D graphics);
 	void update();
+	void forceUpdate();
 	boolean isUpdating();
 	void setVisible(boolean visible);
 	boolean isVisible();
