@@ -19,7 +19,7 @@ public class VisualNovelEngine
 		URL url = ClassLoader.getSystemClassLoader().getResource("DefaultOptions.js");
 		JSInterpreter.eval(new URLReader(url));
 		ModuleHandler.loadModules();
-		ModuleHandler.registerModule(new VisualNovelModule());
+		ModuleHandler.registerModules(new VisualNovelModule());
 		LabelLoader.load();
 		ModuleHandler.init();
 		

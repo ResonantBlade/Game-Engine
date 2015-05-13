@@ -9,7 +9,6 @@ public class BackgroundLayer implements Layer
 {
 	protected volatile SceneBG background = SceneBG.BLANK;
 	private boolean visible = true;
-	private boolean forced = false;
 	private final Module module;
 	
 	public BackgroundLayer(Module module)
@@ -45,19 +44,12 @@ public class BackgroundLayer implements Layer
 	public void update()
 	{
 		background.fade();
-		forced = false;
-	}
-	
-	@Override
-	public void forceUpdate()
-	{
-		forced = true;
 	}
 	
 	@Override
 	public boolean isUpdating()
 	{
-		return forced || background.changing();
+		return background.changing();
 	}
 	
 	@Override

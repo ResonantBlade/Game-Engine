@@ -12,7 +12,6 @@ public class SpriteLayer implements Layer
 {
 	protected volatile List<Displayable> sprites = new ArrayList<Displayable>();
 	private boolean visible = true;
-	private boolean forced = false;
 	private final Module module;
 	
 	public SpriteLayer(Module module)
@@ -51,19 +50,12 @@ public class SpriteLayer implements Layer
 			d.move();
 			d.fade();
 		});
-		forced = false;
-	}
-	
-	@Override
-	public void forceUpdate()
-	{
-		forced = true;
 	}
 	
 	@Override
 	public boolean isUpdating()
 	{
-		return forced || sprites.stream().anyMatch(Displayable::changing);
+		return sprites.stream().anyMatch(Displayable::changing);
 	}
 	
 	@Override

@@ -112,7 +112,6 @@ public class VisualNovelModule implements Module
 			}
 		}
 		backgroundLayer.background = new SceneBG(img, fadeIndex != -1, fadeDuration);
-		backgroundLayer.forceUpdate();
 		spriteLayer.sprites.clear();
 		//((ScreenLayer) layers.get("screen")).screens.clear();
 		//((OverlayLayer) layers.get("overlay")).overlay.clear();
@@ -175,7 +174,6 @@ public class VisualNovelModule implements Module
 			}
 			spriteLayer.sprites.add(current);
 		}
-		spriteLayer.forceUpdate();
 	}
 	
 	protected void hideImage(Image img, String[] transitions)
@@ -194,7 +192,6 @@ public class VisualNovelModule implements Module
 				}
 			}
 		}
-		spriteLayer.forceUpdate();
 	}
 	
 	protected void showLayer(String name)

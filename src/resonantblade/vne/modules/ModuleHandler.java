@@ -91,9 +91,14 @@ public class ModuleHandler
 		loadedModules.parallelStream().forEach(module -> new Thread(() -> module.start()).start());
 	}
 	
-	public static void registerModule(Module module)
+	public static void registerModules(Module... modules)
 	{
-		loadedModules.add(module);
+		for(Module module : modules)
+		{
+			loadedModules.add(module);
+			layers.addAll(module.getLayers());
+		}
+		layers.sort((l1, l2) -> Double.compare(l1.getPriority(), l2.getPriority()));
 	}
 	
 	public static List<Module> getModules()
