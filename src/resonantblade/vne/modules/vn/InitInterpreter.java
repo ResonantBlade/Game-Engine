@@ -126,10 +126,10 @@ public class InitInterpreter implements Interpreter
 					throw new IllegalStateException("Audio identifiers cannot contain spaces");
 				VisualNovelModule.audio.put(identifier, new File(path.quoteText));
 				break;
-			case "script":
+			case "javascript":
 				for(int j = i + 1; j < script.length; j++)
 				{
-					if(script[j].trim().startsWith("end_script"))
+					if(script[j].trim().startsWith("end_javascript"))
 					{
 						JSInterpreter.eval(Arrays.copyOfRange(script, i + 1, j));
 						i = j;

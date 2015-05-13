@@ -23,6 +23,7 @@ public class VisualNovelModule implements Module
 	private List<Layer> layers;
 	private BackgroundLayer backgroundLayer;
 	private SpriteLayer spriteLayer;
+	private OverlayLayer overlayLayer;
 	
 	protected static HashMap<String, Character> characters = new HashMap<String, Character>();
 	protected static TaggedImageMap images = new TaggedImageMap();
@@ -40,7 +41,7 @@ public class VisualNovelModule implements Module
 		layers.add(backgroundLayer = new BackgroundLayer(this));
 		layers.add(spriteLayer = new SpriteLayer(this));
 		//layers.add(new ScreenLayer(this));
-		//layers.add(new OverlayLayer(this));
+		layers.add(overlayLayer = new OverlayLayer(this));
 	}
 	
 	@Override
@@ -114,7 +115,7 @@ public class VisualNovelModule implements Module
 		backgroundLayer.background = new SceneBG(img, fadeIndex != -1, fadeDuration);
 		spriteLayer.sprites.clear();
 		//((ScreenLayer) layers.get("screen")).screens.clear();
-		//((OverlayLayer) layers.get("overlay")).overlay.clear();
+		overlayLayer.overlays.clear();
 	}
 	
 	protected void showImage(Image img, Point3D position, float alpha, String... transitions)

@@ -128,6 +128,8 @@ public class ScriptInterpreter implements Interpreter
 				System.out.println("Now on line: " + line);
 				String start = line.substring(0, line.indexOf(' ') == -1 ? line.length() : line.indexOf(' '));
 				line = line.substring(start.length()).trim();
+				boolean noBlock = false;
+				long noBlockTime = Long.MAX_VALUE;
 				switch(start)
 				{
 				case "say":
@@ -291,6 +293,27 @@ public class ScriptInterpreter implements Interpreter
 						alpha = Float.parseFloat(temp.substring(0, end));
 						line = line.substring(0, aIndex).trim() + " " + temp.substring(end, temp.length()).trim();
 					}
+					if(line.contains(" noblock ") || line.endsWith(" noblock"))
+					{
+						int nIndex = line.indexOf(" noblock ");
+						if(nIndex == -1)
+							nIndex = line.lastIndexOf(" noblock");
+						String temp = line.substring(nIndex + 8).trim();
+						int end = temp.indexOf(" ");
+						if(end == -1)
+							end = temp.length();
+						noBlock = true;
+						noBlockTime = System.currentTimeMillis();
+						try
+						{
+							noBlockTime += Double.parseDouble(temp.substring(0, end)) * 1000.0D;
+							line = line.substring(0, nIndex).trim() + " " + temp.substring(end, temp.length()).trim();
+						}
+						catch(Exception e)
+						{
+							line = line.substring(0, nIndex).trim() + " " + line.substring(nIndex + 8).trim();
+						}
+					}
 					transitions = new String[0];
 					if(line.contains(" with "))
 					{
@@ -346,9 +369,9 @@ public class ScriptInterpreter implements Interpreter
 						throw new IllegalStateException("Unknown layer command");
 					}
 					break;
-				case "script":
+				case "javascript":
 					int count = 1;
-					while(!script.nextLine().trim().startsWith("end_script"))
+					while(!script.nextLine().trim().startsWith("end_javascript"))
 						count++;
 					String[] stra = new String[count - 1];
 					for(int i = 0; i < count; i++)
@@ -362,8 +385,12 @@ public class ScriptInterpreter implements Interpreter
 				default:
 					System.err.println("Unknown command: " + start + " " + line);
 				}
+				
 				while(core.updating())
-					continue;
+				{
+					if(noBlock && noBlockTime < System.currentTimeMillis())
+						break;
+				}
 			}
 		}
 		
