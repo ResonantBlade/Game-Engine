@@ -38,6 +38,12 @@ public class SpriteLayer implements Layer
 	}
 	
 	@Override
+	public void init()
+	{
+		
+	}
+	
+	@Override
 	public void paint(Graphics2D graphics)
 	{
 		IterationTools.forEach(sprites, displayable -> displayable.paint(graphics));

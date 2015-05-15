@@ -9,6 +9,7 @@ import java.io.File;
 
 import resonantblade.ge.FontHandler;
 import resonantblade.ge.Resources;
+import resonantblade.ge.gui.FPSController;
 import resonantblade.ge.gui.Layer;
 import resonantblade.ge.modules.Module;
 import resonantblade.ge.script.JSInterpreter;
@@ -35,23 +36,6 @@ public class OverlayLayer implements Layer
 	public OverlayLayer(Module module)
 	{
 		this.module = module;
-		
-		String background = JSInterpreter.eval("style.dialogue_window.background");
-		this.background = Resources.loadImage(new File(background));
-		
-		xMin = JSInterpreter.<Number>eval("style.dialogue_window.xMin").intValue();
-		xMax = JSInterpreter.<Number>eval("style.dialogue_window.xMin").intValue();
-		yMin = JSInterpreter.<Number>eval("style.dialogue_window.xMin").intValue();
-		yMax = JSInterpreter.<Number>eval("style.dialogue_window.xMin").intValue();
-		paddingLeft = JSInterpreter.<Number>eval("style.dialogue_window.padding_left").intValue();
-		paddingRight = JSInterpreter.<Number>eval("style.dialogue_window.padding_right").intValue();
-		paddingTop = JSInterpreter.<Number>eval("style.dialogue_window.padding_top").intValue();
-		paddingBottom = JSInterpreter.<Number>eval("style.dialogue_window.padding_bottom").intValue();
-		speed = JSInterpreter.<Number>eval("config.default_afm_time").doubleValue();
-		
-		String font = JSInterpreter.eval("style.default.font");
-		size = JSInterpreter.<Number>eval("style.default.size").intValue();
-		this.font = FontHandler.getFont(font).deriveFont((float) size);
 	}
 	
 	@Override
@@ -70,6 +54,27 @@ public class OverlayLayer implements Layer
 	public double getPriority()
 	{
 		return 3.0D;
+	}
+	
+	@Override
+	public void init()
+	{
+		String background = JSInterpreter.eval("style.dialogue_window.background");
+		this.background = Resources.loadImage(background == null ? null : new File(background));
+		
+		xMin = JSInterpreter.<Number>eval("style.dialogue_window.xMin").intValue();
+		xMax = JSInterpreter.<Number>eval("style.dialogue_window.xMax").intValue();
+		yMin = JSInterpreter.<Number>eval("style.dialogue_window.yMin").intValue();
+		yMax = JSInterpreter.<Number>eval("style.dialogue_window.yMax").intValue();
+		paddingLeft = JSInterpreter.<Number>eval("style.dialogue_window.padding_left").intValue();
+		paddingRight = JSInterpreter.<Number>eval("style.dialogue_window.padding_right").intValue();
+		paddingTop = JSInterpreter.<Number>eval("style.dialogue_window.padding_top").intValue();
+		paddingBottom = JSInterpreter.<Number>eval("style.dialogue_window.padding_bottom").intValue();
+		speed = JSInterpreter.<Number>eval("config.default_afm_time").doubleValue() / FPSController.REFRESH_INTERVAL_MS;
+		
+		String font = JSInterpreter.eval("style.default.font");
+		size = JSInterpreter.<Number>eval("style.default.size").intValue();
+		this.font = FontHandler.getFont(font).deriveFont((float) size);
 	}
 	
 	@Override
@@ -104,6 +109,7 @@ public class OverlayLayer implements Layer
 	public void setVisible(boolean visible)
 	{
 		this.visible = visible;
+		System.out.println(visible);
 	}
 	
 	@Override

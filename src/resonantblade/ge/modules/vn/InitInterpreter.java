@@ -101,7 +101,7 @@ public class InitInterpreter implements Interpreter
 				
 				int color = 0;
 				if(charName.endIndex < line.length())
-					color = Integer.parseInt(line.substring(charName.endIndex + 1), 16);
+					color = Integer.parseInt(line.substring(charName.endIndex + 1).trim(), 16);
 				VisualNovelModule.characters.put(identifier, new Character(charName.quoteText, color));
 				break;
 			case "Image":

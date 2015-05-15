@@ -1,4 +1,4 @@
-config.defualt_afm_time = 10
+config.default_afm_time = 10
 
 var style = new Object()
 style.dialogue_window = new Object()
@@ -12,5 +12,5 @@ style.dialogue_window.padding_right = 150
 style.dialogue_window.padding_top = 0
 style.dialogue_window.padding_bottom = 25
 style.default = new Object()
-style.default.font = null
+style.default.font = "Font/sui generis rg.ttf"
 style.default.size = 22

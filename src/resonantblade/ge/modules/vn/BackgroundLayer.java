@@ -35,6 +35,12 @@ public class BackgroundLayer implements Layer
 	}
 	
 	@Override
+	public void init()
+	{
+		
+	}
+	
+	@Override
 	public void paint(Graphics2D graphics)
 	{
 		background.paint(graphics);

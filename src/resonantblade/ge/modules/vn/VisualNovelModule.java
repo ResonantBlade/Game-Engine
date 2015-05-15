@@ -81,6 +81,7 @@ public class VisualNovelModule implements Module
 	@Override
 	public void init()
 	{
+		layers.stream().forEach(layer -> layer.init());
 		initInterpreter.interpret(null);
 	}
 	
@@ -92,8 +93,9 @@ public class VisualNovelModule implements Module
 	
 	protected void say(String name, Color color, String text)
 	{
+		overlayLayer.setText(name, color, text);
 		// TODO put in overlay layer
-		System.out.println((name.isEmpty() ? "" : name + ": ") + text);
+		//System.out.println((name.isEmpty() ? "" : name + ": ") + text);
 	}
 	
 	protected void say(Character charr, String text)

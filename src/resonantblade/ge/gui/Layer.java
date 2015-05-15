@@ -9,6 +9,7 @@ public interface Layer
 	Module getModule();
 	String getName();
 	double getPriority();
+	void init();
 	void paint(Graphics2D graphics);
 	void update();
 	boolean isUpdating();

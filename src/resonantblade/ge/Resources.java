@@ -9,6 +9,8 @@ public class Resources
 {
 	public static BufferedImage loadImage(File file)
 	{
+		if(file == null)
+			return new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
 		try
 		{
 			return ImageIO.read(file);
