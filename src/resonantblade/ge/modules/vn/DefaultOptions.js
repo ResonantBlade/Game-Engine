@@ -1,3 +1,5 @@
+config.defualt_afm_time = 10
+
 var style = new Object()
 style.dialogue_window = new Object()
 style.dialogue_window.background = null

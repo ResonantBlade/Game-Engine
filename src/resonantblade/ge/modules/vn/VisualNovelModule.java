@@ -122,7 +122,7 @@ public class VisualNovelModule implements Module
 		backgroundLayer.background = new SceneBG(img, fadeIndex != -1, fadeDuration);
 		spriteLayer.sprites.clear();
 		//((ScreenLayer) layers.get("screen")).screens.clear();
-		overlayLayer.overlays.clear();
+		overlayLayer.character = TextDisplayable.BLANK;
 	}
 	
 	protected void showImage(Image img, Point3D position, float alpha, String... transitions)
