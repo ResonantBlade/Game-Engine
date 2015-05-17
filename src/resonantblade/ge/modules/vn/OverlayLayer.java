@@ -90,7 +90,8 @@ public class OverlayLayer implements Layer
 		FontRenderContext frc = new FontRenderContext(null, true, true);
 		int height = (int) Math.ceil(font.getLineMetrics(name, frc).getHeight());
 		character = new TextDisplayable(xMin + paddingLeft, yMin + paddingTop, xMax - paddingRight, yMin + height, name, color, font, speed);
-		character = new TextDisplayable(xMin + paddingLeft, yMin + paddingTop + height, xMax - paddingRight, yMax - paddingBottom, name, color, font, speed);
+		while(character.changing()) character.move();
+		this.text = new TextDisplayable(xMin + paddingLeft, yMin + paddingTop + height, xMax - paddingRight, yMax - paddingBottom, text, color, font, speed);
 	}
 	
 	@Override
@@ -109,7 +110,6 @@ public class OverlayLayer implements Layer
 	public void setVisible(boolean visible)
 	{
 		this.visible = visible;
-		System.out.println(visible);
 	}
 	
 	@Override

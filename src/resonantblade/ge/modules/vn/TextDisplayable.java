@@ -66,7 +66,7 @@ public class TextDisplayable extends Displayable
 		int lastCharRead = 0;
 		while(count < (int) charsRendered)
 		{
-			if(count + list.get(lastLine).length() <= (int) charsRendered)
+			if(lastLine < list.size() && count + list.get(lastLine).length() <= (int) charsRendered)
 			{
 				count += list.get(lastLine).length();
 				lastLine++;

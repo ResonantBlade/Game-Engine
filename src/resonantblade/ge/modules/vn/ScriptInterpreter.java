@@ -141,11 +141,11 @@ public class ScriptInterpreter implements Interpreter
 						text = ScriptUtils.nextQuote(line);
 						if(text != null)
 						{
-							core.say(name, Color.BLACK, text.quoteText);
+							core.say(name, Color.WHITE, text.quoteText);
 						}
 						else
 						{
-							core.say("", Color.BLACK, name);
+							core.say("", Color.WHITE, name);
 						}
 					}
 					else
@@ -153,6 +153,12 @@ public class ScriptInterpreter implements Interpreter
 						String name = line.substring(0, text.startIndex).trim();
 						Character charr = VisualNovelModule.characters.get(name);
 						core.say(charr, text.quoteText);
+					}
+					while(core.updating())
+						continue;
+					synchronized(GUI.userInteractLock)
+					{
+						try{GUI.userInteractLock.wait(0);}catch(Exception e){}
 					}
 					break;
 				case "call":

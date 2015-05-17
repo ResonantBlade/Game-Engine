@@ -39,7 +39,7 @@ public class SceneBG extends ImageDisplayable
 		
 		BufferedImage image = getImage().getImage();
 		
-		g.drawImage(image, 0, 0, GUI.WIDTH, GUI.HEIGHT, null);
+		g.drawImage(image, (int) (GUI.WIDTH * position.getX()), (int) (GUI.HEIGHT * position.getY()), null);
 		g.setComposite(prevComposite);
 	}
 }
