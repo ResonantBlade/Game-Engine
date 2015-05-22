@@ -58,4 +58,10 @@ public class Image
 			image = Resources.loadImage(new File(url));
 		return image;
 	}
+	
+	@Override
+	public boolean equals(Object o)
+	{
+		return o instanceof Image && tagsAreSame(((Image) o).getTags());
+	}
 }

@@ -50,12 +50,19 @@ public class BackgroundLayer implements Layer
 	public void update()
 	{
 		background.fade();
+		background.move();
 	}
 	
 	@Override
 	public boolean isUpdating()
 	{
 		return background.changing();
+	}
+	
+	@Override
+	public boolean isBlocking()
+	{
+		return background.isBlocking();
 	}
 	
 	@Override

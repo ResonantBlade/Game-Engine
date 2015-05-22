@@ -39,7 +39,13 @@ public class SceneBG extends ImageDisplayable
 		
 		BufferedImage image = getImage().getImage();
 		
-		g.drawImage(image, (int) (GUI.WIDTH * position.getX()), (int) (GUI.HEIGHT * position.getY()), null);
+		g.drawImage(image, (int) (GUI.WIDTH * (position.getX() - 0.5D)), (int) (GUI.HEIGHT * (position.getY() - 0.5D)), null);
 		g.setComposite(prevComposite);
+	}
+	
+	@Override
+	public boolean equals(Object o)
+	{
+		return o instanceof SceneBG && image.equals(((SceneBG) o).image);
 	}
 }

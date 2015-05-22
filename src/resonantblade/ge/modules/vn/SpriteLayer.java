@@ -65,6 +65,12 @@ public class SpriteLayer implements Layer
 	}
 	
 	@Override
+	public boolean isBlocking()
+	{
+		return sprites.stream().anyMatch(Displayable::isBlocking);
+	}
+	
+	@Override
 	public void setVisible(boolean visible)
 	{
 		this.visible = visible;

@@ -41,7 +41,8 @@ public class FPSController
         while(keepGoing)
         {
             long durationMs = redraw();
-            try{Thread.sleep(Math.max(0, REFRESH_INTERVAL_MS - durationMs));}catch(InterruptedException e){}
+            if(REFRESH_INTERVAL_MS - durationMs > 0)
+            	try{Thread.sleep(REFRESH_INTERVAL_MS - durationMs);}catch(InterruptedException e){}
         }
     }
     

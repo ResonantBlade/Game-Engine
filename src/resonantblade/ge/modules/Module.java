@@ -11,9 +11,9 @@ public interface Module
 {
 	String getName();
 	URL getDefaultOptions();
-	List<Interpreter> getInterpreters();
-	List<Layer> getLayers();
-	List<EventListener> getListeners();
+	List<? extends Interpreter> getInterpreters();
+	List<? extends Layer> getLayers();
+	List<? extends EventListener> getListeners();
 	void init();
 	void start();
 }

@@ -15,6 +15,8 @@ public abstract class Displayable
 	protected float deltaAlpha = 0.0F;
 	protected int fadeAmt = 0;
 	protected String[] transitions;
+	protected boolean noBlock = false;
+	protected long blockTime = 0;
 	
 	public Displayable(Image image, Point3D position, float alpha, String... transitions)
 	{
@@ -95,4 +97,15 @@ public abstract class Displayable
 	public abstract void paint(Graphics2D g);
 	
 	public abstract boolean changing();
+	
+	public void noBlock(double seconds)
+	{
+		noBlock = seconds >= 0.0D;
+		blockTime = System.currentTimeMillis() + (long) (seconds * 1000.0D);
+	}
+	
+	public boolean isBlocking()
+	{
+		return changing() && (!noBlock || blockTime > System.currentTimeMillis());
+	}
 }

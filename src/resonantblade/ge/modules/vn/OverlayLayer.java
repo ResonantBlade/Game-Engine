@@ -107,6 +107,12 @@ public class OverlayLayer implements Layer
 	}
 	
 	@Override
+	public boolean isBlocking()
+	{
+		return text.isBlocking();
+	}
+	
+	@Override
 	public void setVisible(boolean visible)
 	{
 		this.visible = visible;

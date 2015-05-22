@@ -13,6 +13,7 @@ public interface Layer
 	void paint(Graphics2D graphics);
 	void update();
 	boolean isUpdating();
+	boolean isBlocking();
 	void setVisible(boolean visible);
 	boolean isVisible();
 }

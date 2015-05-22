@@ -128,8 +128,6 @@ public class ScriptInterpreter implements Interpreter
 				System.out.println("Now on line: " + line);
 				String start = line.substring(0, line.indexOf(' ') == -1 ? line.length() : line.indexOf(' '));
 				line = line.substring(start.length()).trim();
-				boolean noBlock = false;
-				long noBlockTime = Long.MAX_VALUE;
 				switch(start)
 				{
 				case "say":
@@ -154,7 +152,7 @@ public class ScriptInterpreter implements Interpreter
 						Character charr = VisualNovelModule.characters.get(name);
 						core.say(charr, text.quoteText);
 					}
-					while(core.updating())
+					while(core.blocking())
 						continue;
 					synchronized(GUI.userInteractLock)
 					{
@@ -239,6 +237,39 @@ public class ScriptInterpreter implements Interpreter
 					}
 					break;
 				case "scene":
+					double x = Double.NaN;
+					double y = Double.NaN;
+					double z = Double.NaN;
+					if(line.contains(" xpos "))
+					{
+						int xIndex = line.indexOf(" xpos ");
+						String temp = line.substring(xIndex + 5).trim();
+						int end = temp.indexOf(" ");
+						if(end == -1)
+							end = temp.length();
+						x = Double.parseDouble(temp.substring(0, end));
+						line = line.substring(0, xIndex).trim() + " " + temp.substring(end, temp.length()).trim();
+					}
+					if(line.contains(" ypos "))
+					{
+						int yIndex = line.indexOf(" ypos ");
+						String temp = line.substring(yIndex + 5).trim();
+						int end = temp.indexOf(" ");
+						if(end == -1)
+							end = temp.length();
+						y = Double.parseDouble(temp.substring(0, end));
+						line = line.substring(0, yIndex).trim() + " " + temp.substring(end, temp.length()).trim();
+					}
+					if(line.contains(" zoom "))
+					{
+						int zIndex = line.indexOf(" zoom ");
+						String temp = line.substring(zIndex + 5).trim();
+						int end = temp.indexOf(" ");
+						if(end == -1)
+							end = temp.length();
+						z = Double.parseDouble(temp.substring(0, end));
+						line = line.substring(0, zIndex).trim() + " " + temp.substring(end, temp.length()).trim();
+					}
 					String[] nameAndTags = line.replaceAll(" {2,}", " ").split(" ");
 					String name = nameAndTags[0];
 					String[] tags = nameAndTags;
@@ -252,12 +283,10 @@ public class ScriptInterpreter implements Interpreter
 					}
 					String[] transitions = Arrays.copyOfRange(tags, withIndex + 1, tags.length);
 					tags = Arrays.copyOfRange(tags, 0, withIndex == tags.length - 1 ? tags.length : withIndex);
-					core.changeScene(VisualNovelModule.images.get(name, Arrays.asList(tags)), transitions);
+					core.changeScene(VisualNovelModule.images.get(name, Arrays.asList(tags)), new Point3D(x, y, z), transitions);
 					break;
 				case "show":
-					double x = Double.NaN;
-					double y = Double.NaN;
-					double z = Double.NaN;
+					x = y = z = Double.NaN;
 					float alpha = 1.0F;
 					if(line.contains(" xpos "))
 					{
@@ -299,6 +328,8 @@ public class ScriptInterpreter implements Interpreter
 						alpha = Float.parseFloat(temp.substring(0, end));
 						line = line.substring(0, aIndex).trim() + " " + temp.substring(end, temp.length()).trim();
 					}
+					boolean noBlock = false;
+					double blockTime = -1.0D;
 					if(line.contains(" noblock ") || line.endsWith(" noblock"))
 					{
 						int nIndex = line.indexOf(" noblock ");
@@ -309,10 +340,10 @@ public class ScriptInterpreter implements Interpreter
 						if(end == -1)
 							end = temp.length();
 						noBlock = true;
-						noBlockTime = System.currentTimeMillis();
+						blockTime = 0.0D;
 						try
 						{
-							noBlockTime += Double.parseDouble(temp.substring(0, end)) * 1000.0D;
+							blockTime = Double.parseDouble(temp.substring(0, end));
 							line = line.substring(0, nIndex).trim() + " " + temp.substring(end, temp.length()).trim();
 						}
 						catch(Exception e)
@@ -335,7 +366,7 @@ public class ScriptInterpreter implements Interpreter
 					name = line.substring(0, line.indexOf(" ") != -1 ? line.indexOf(" ") : line.length());
 					//line = line.substring(name.length()).trim();
 					tags = line.replaceAll(" {2,}", " ").split(" ");
-					core.showImage(VisualNovelModule.images.get(name, Arrays.asList(tags)), new Point3D(x, y, z), alpha, transitions);
+					core.showImage(VisualNovelModule.images.get(name, Arrays.asList(tags)), new Point3D(x, y, z), alpha, noBlock, blockTime, transitions);
 					break;
 				case "hide":
 					nameAndTags = line.replaceAll(" {2,}", " ").split(" ");
@@ -355,7 +386,26 @@ public class ScriptInterpreter implements Interpreter
 						transitions = Arrays.copyOfRange(tags, withIndex + 1, tags.length);
 						tags = Arrays.copyOfRange(tags, 0, withIndex == tags.length - 1 ? tags.length : withIndex);
 					}
-					core.hideImage(VisualNovelModule.images.get(name, Arrays.asList(tags)), transitions);
+					
+					blockTime = -1.0D;
+					for(int i = 0; i < transitions.length; i++)
+					{
+						if(transitions[i].equals("noblock"))
+						{
+							blockTime = 0.0D;
+							if(i < transitions.length - 1)
+							{
+								try
+								{
+									blockTime = Double.parseDouble(transitions[i + 1]);
+									i++;
+								}
+								catch(NumberFormatException e) {}
+							}
+						}
+					}
+					
+					core.hideImage(VisualNovelModule.images.get(name, Arrays.asList(tags)), blockTime, transitions);
 					break;
 				case "quit":
 					if(!Boolean.parseBoolean(line))
@@ -392,11 +442,8 @@ public class ScriptInterpreter implements Interpreter
 					System.err.println("Unknown command: " + start + " " + line);
 				}
 				
-				while(core.updating())
-				{
-					if(noBlock && noBlockTime < System.currentTimeMillis())
-						break;
-				}
+				while(core.updating() && core.blocking())
+					continue;
 			}
 		}
 		

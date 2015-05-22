@@ -1,8 +1,11 @@
 package resonantblade.ge.gui;
 
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Insets;
+import java.awt.Toolkit;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -34,7 +37,8 @@ public class GUI
 		
 		buffer = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_ARGB);
 		frame = new JFrame(title);
-		frame.setSize(960, 540);
+		Dimension size = getOptimalScreenSize(frame, WIDTH, HEIGHT);
+		frame.setSize(size.width, size.height);
 		frame.setLocationRelativeTo(null);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setVisible(true);
@@ -66,6 +70,42 @@ public class GUI
 		fpsController.start(this);
 	}
 	
+	private Dimension getOptimalScreenSize(JFrame frame, int preferredWidth, int preferredHeight)
+	{
+		Toolkit toolkit = Toolkit.getDefaultToolkit();
+		
+		Dimension screenSize = toolkit.getScreenSize();
+		Insets insets = toolkit.getScreenInsets(frame.getGraphicsConfiguration());
+		screenSize.width -= insets.left + insets.right;
+		screenSize.height -= insets.top + insets.bottom;
+		insets = frame.getInsets();
+		screenSize.width -= insets.left + insets.right;
+		screenSize.height -= insets.top + insets.bottom;
+		
+		double wRatio = (double) screenSize.width / preferredWidth;
+		double hRatio = (double) screenSize.height / preferredHeight;
+		
+		if(wRatio >= 1.0D && hRatio >= 1.0D)
+			return new Dimension(preferredWidth, preferredHeight);
+		
+		if(wRatio < hRatio)
+		{
+			// use width
+			double scale = (double) screenSize.width / preferredWidth;
+			screenSize.width = (int) (preferredWidth * scale);
+			screenSize.height = (int) (preferredHeight * scale);
+		}
+		else
+		{
+			// use height
+			double scale = (double) screenSize.height / preferredHeight;
+			screenSize.width = (int) (preferredWidth * scale);
+			screenSize.height = (int) (preferredHeight * scale);
+		}
+		
+		return screenSize;
+	}
+	
 	public void updateVisible()
 	{
 		for(Layer layer : ModuleHandler.layers)
@@ -73,7 +113,7 @@ public class GUI
 			if(layer.isUpdating())
 			{
 				layer.update();
-				if(layer.isVisible())
+				if(layer.isVisible() && layer.isBlocking())
 					return;
 			}
 		}
