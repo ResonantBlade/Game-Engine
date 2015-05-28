@@ -61,7 +61,7 @@ public class FPSController
         
         // asynchronously signals the paint to happen in the awt event
         // dispatcher thread
-        gui.repaint();
+        //gui.repaint(); MOVED INTO waitForPaint METHOD
         
         // use a lock here that is only released once the paintComponent
         // has happened so that we know exactly when the paint was completed and
@@ -78,6 +78,7 @@ public class FPSController
         {
             synchronized(redrawLock)
             {
+            	gui.repaint();
                 redrawLock.wait();
             }
         }

@@ -23,13 +23,13 @@ public class VisualNovelEngine
 		LabelLoader.load();
 		ModuleHandler.init();
 		
-		java.awt.EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() {
+		//java.awt.EventQueue.invokeLater(new Runnable() {
+        //    @Override
+        //    public void run() {
                 FPSController fpscon = new FPSController();
                 gui = new GUI((String) JSInterpreter.eval("config.window_title"), fpscon);
-            }
-        });
+        //    }
+        //});
 		
 		ModuleHandler.start();
 	}

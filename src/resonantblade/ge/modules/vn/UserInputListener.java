@@ -9,6 +9,8 @@ import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 
 import resonantblade.ge.gui.GUI;
+import resonantblade.ge.gui.Layer;
+import resonantblade.ge.modules.ModuleHandler;
 
 public class UserInputListener implements KeyListener, MouseListener, MouseWheelListener, MouseMotionListener
 {
@@ -72,7 +74,18 @@ public class UserInputListener implements KeyListener, MouseListener, MouseWheel
 	@Override
 	public void keyPressed(KeyEvent e)
 	{
-		
+		if(e.getKeyCode() == KeyEvent.VK_CONTROL)
+		{
+			for(Layer layer : ModuleHandler.layers)
+			{
+				while(layer.isUpdating())
+					layer.update();
+			}
+			synchronized(GUI.userInteractLock)
+			{
+				GUI.userInteractLock.notifyAll();
+			}
+		}
 	}
 	
 	@Override

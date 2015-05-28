@@ -80,7 +80,7 @@ public class OverlayLayer implements Layer
 	@Override
 	public void paint(Graphics2D graphics)
 	{
-		graphics.drawImage(background, xMin + paddingLeft, yMin + paddingTop, xMax - paddingRight, yMax - paddingBottom, null);
+		graphics.drawImage(background, xMin, yMin, xMax, yMax, null);
 		character.paint(graphics);
 		text.paint(graphics);
 	}

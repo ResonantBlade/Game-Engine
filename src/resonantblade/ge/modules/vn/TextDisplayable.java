@@ -81,10 +81,10 @@ public class TextDisplayable extends Displayable
 		g.setColor(color);
 		for(int i = 0; i < lastLine && height * i + height < this.height; i++)
 		{
-			g.drawString(list.get(i), (int) position.getX(), (int) position.getY() + height * i);
+			g.drawString(list.get(i), (int) position.getX(), (int) position.getY() + height * (i + 1));
 		}
 		if(lastLine < list.size() && height * lastLine + height < this.height)
-			g.drawString(list.get(lastLine).substring(0, lastCharRead), (int) position.getX(), (int) position.getY() + height * lastLine);
+			g.drawString(list.get(lastLine).substring(0, lastCharRead), (int) position.getX(), (int) position.getY() + height * lastLine + height);
 	}
 	
 	@Override

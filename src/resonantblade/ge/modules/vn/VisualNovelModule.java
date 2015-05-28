@@ -79,8 +79,8 @@ public class VisualNovelModule implements Module
 	@Override
 	public void init()
 	{
-		layers.stream().forEach(layer -> layer.init());
 		initInterpreter.interpret(null);
+		layers.stream().forEach(layer -> layer.init());
 	}
 	
 	@Override
